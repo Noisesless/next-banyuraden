@@ -4,167 +4,114 @@
 
 # Portal Resmi Kalurahan Banyuraden
 
-**Sistem Informasi & Portal Layanan Digital Terpadu Kalurahan Banyuraden**  
-*Kapanewon Gamping, Kabupaten Sleman, Daerah Istimewa Yogyakarta*  
-🌐 **Live URL Produksi:** [https://banyuraden.smartdesa.net](https://banyuraden.smartdesa.net)
+**Pusat Informasi & Layanan Digital Terpadu Kalurahan Banyuraden**  
+*Kapanewon Gamping, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55293*  
+🌐 **Portal Publik:** [https://banyuraden.smartdesa.net](https://banyuraden.smartdesa.net)
 
 ---
 
-## 📌 Ringkasan Sistem
+## 📌 Tentang Portal
 
-Portal Resmi Kalurahan Banyuraden adalah platform web modern berbasis **Next.js 15 (App Router)** yang berfungsi sebagai pusat layanan digital dan **API Aggregator** terpadu. Sistem ini mengintegrasikan berbagai sumber data upstream resmi pemerintah kalurahan, kabupaten, dan sistem geospasial guna menyajikan informasi publik yang transparan, akurat, dan berkecepatan tinggi.
-
-### Keunggulan Arsitektur
-- **High-Performance Hybrid Rendering:** Kombinasi Server-Side Rendering (SSR), Incremental Static Regeneration (ISR), dan Static Site Generation (SSG) untuk meminimalkan waktu muat halaman (<1 detik).
-- **Multi-Source Upstream Resilience:** Didukung mekanisme failover otomatis antara REST API resmi Kabupaten Sleman, OpenSID Kalurahan, dan cached static data.
-- **Laptop-First & Mobile Responsive:** Tampilan responsif optimal pada resolusi laptop (1366×768) hingga smartphone Android (360px – 412px).
-- **Keamanan Tingkat Produksi:** Proteksi menyeluruh dari serangan XSS, Clickjacking, MIME-sniffing, dan abusive request.
+Portal Resmi Kalurahan Banyuraden dikembangkan sebagai platform pelayanan publik dan keterbukaan informasi bagi seluruh warga masyarakat Banyuraden dan publik luas. Website ini memadukan berbagai kanal informasi resmi kalurahan, agenda kegiatan, transparansi data pembangunan, serta integrasi layanan kemasyarakatan dalam satu antarmuka yang modern, cepat, dan mudah diakses.
 
 ---
 
-## 🌐 Integrasi Sumber Data Upstream
+## ✨ Fitur & Layanan Utama
 
-Portal ini secara aktif menyinkronkan data dari saluran resmi berikut:
+### 1. Informasi & Berita Terkini
+Menyajikan publikasi liputan kegiatan pamong kalurahan, artikel pembangunan, serta agenda pengumuman resmi pemerintah kalurahan secara berkala.
 
-1. **WordPress REST API Kabupaten Sleman** (`banyuradensid.slemankab.go.id`):
-   - Publikasi berita dan kegiatan kalurahan terkini.
-   - Feed **Pengumuman Resmi & Agenda Pamong** (Kategori ID 3).
-2. **OpenSID Kalurahan Banyuraden** (`banyuraden.sleman-desa.id` / `banyuraden.id`):
-   - Layanan administrasi kependudukan dan surat-menyurat online.
-   - Portal pengaduan warga resmi.
-   - Data APBKal, transparansi anggaran, dan realisasi keuangan desa.
-3. **Peta Interaktif Geospasial (GeoJSON & MapLibre GL):**
-   - Batas administratif Kalurahan Banyuraden dan 8 Padukuhan: *Banyumeneng, Cokrowijayan, Dowangan, Guyangan, Kaliabu, Kanoman, Modinan, Sukunan*.
-   - Pemetaan titik fasilitas kesehatan, pendidikan, ibadah, dan kantor pamong.
-4. **Sensor IoT Lingkungan & Cuaca (ThingSpeak API):**
-   - Pemantauan metrik kualitas lingkungan dan stasiun cuaca lokal secara real-time.
+### 2. Layanan Mandiri Kependudukan
+Akses langsung ke portal layanan mandiri kependudukan untuk kemudahan warga dalam pengurusan administrasi surat-menyurat secara digital.
+
+### 3. Layanan Pengaduan Masyarakat
+Saluran aspirasi dan pengaduan warga yang terhubung langsung dengan sistem pelayanan penanganan pengaduan resmi kalurahan.
+
+### 4. Layanan Ambulans Siaga Kalurahan
+Informasi operasional dan kontak darurat layanan ambulans kalurahan 24 jam yang disediakan **bebas biaya (gratis)** bagi warga Kalurahan Banyuraden, mencakup kebutuhan rujukan medis dan pendampingan lansia (Layanan Lansia Terintegrasi).
+- **Hotline Darurat / WhatsApp:** 0896-1262-4627
+- **Telepon Kantor:** (0274) 621626
+
+### 5. Transparansi SDGs Kalurahan
+Penyajian data capaian indikator Tujuan Pembangunan Berkelanjutan (SDGs) Desa berbasis 18 kriteria arah pembangunan Permendesa No. 21 Tahun 2020.
+
+### 6. Lapak Digital UMKM
+Katalog etalase produk-produk unggulan karya pelaku usaha mikro, kecil, dan menengah (UMKM) dari 8 padukuhan di Kalurahan Banyuraden.
+
+### 7. Inovasi SiPenTa
+Integrasi program pencegahan dan pemantauan stunting balita kalurahan untuk mewujudkan generasi sehat Banyuraden.
+
+### 8. Peta Geospasial Padukuhan
+Peta interaktif wilayah administratif yang mencakup 8 Padukuhan: *Banyumeneng, Cokrowijayan, Dowangan, Guyangan, Kaliabu, Kanoman, Modinan, dan Sukunan*.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Teknologi
 
-- **Framework:** Next.js 15.x (React 19, TypeScript)
-- **Styling & UI:** Tailwind CSS, Radix UI, Lucide Icons, Phosphor Icons
-- **Database & ORM:** MySQL / MariaDB via Prisma ORM
-- **Pemetaan:** MapLibre GL / OpenStreetMap (CDN compliant)
-- **Sanitasi Konten:** DOMPurify (`isomorphic-dompurify`)
-- **Proses Manajer VPS:** PM2 Cluster Mode (Node.js runtime)
+- **Framework:** Next.js (App Router), React, TypeScript
+- **Antarmuka & Styling:** Tailwind CSS, Radix UI
+- **Basis Data:** Prisma ORM
+- **Peta Digital:** MapLibre GL & GeoJSON
 
 ---
 
-## 🚀 Panduan Memulai (Local Development)
+## 🚀 Panduan Memulai (Development Lokal)
 
 ### 1. Prasyarat
-- Node.js versi 20.x atau lebih baru
-- npm versi 10.x atau lebih baru
-- Akses database MySQL (opsional untuk mode baca API statis)
+- Node.js (versi 20 atau lebih baru)
+- npm (versi 10 atau lebih baru)
 
-### 2. Instalasi Dependensi
+### 2. Instalasi
 ```bash
+# Clone repositori
 git clone https://github.com/Noisesless/next-banyuraden.git
 cd next-banyuraden
+
+# Instal dependensi
 npm install
 ```
 
-### 3. Konfigurasi Lingkungan (.env)
-Salin berkas `.env.example` menjadi `.env.local`:
+### 3. Konfigurasi Lingkungan
+Salin berkas template environment:
 ```bash
 cp .env.example .env.local
 ```
-Sesuaikan parameter koneksi database dan domain upstream sesuai kebutuhan lokal.
+Sesuaikan variabel lingkungan yang diperlukan pada berkas `.env.local`.
 
-### 4. Menjalankan Server Development
+### 4. Menjalankan Server Lokal
 ```bash
 npm run dev
 ```
-Buka browser pada alamat: **`http://localhost:5091`** (port dev default).
+Buka peramban di [http://localhost:3000](http://localhost:3000) untuk melihat antarmuka website.
 
----
-
-## 📦 Build & Deployment Produksi
-
-### 1. Kompilasi Produksi
+### 5. Kompilasi Produksi
 ```bash
-# Generate Prisma client
-npx prisma generate
-
-# Build Next.js bundle
 npm run build
-```
-
-### 2. Menjalankan via PM2 (Server Produksi)
-```bash
-pm2 start npm --name "next-banyuraden" -- start -- -p 5091
-pm2 save
+npm start
 ```
 
 ---
 
-## 🔒 Standar Keamanan Produksi (Production Hardening)
+## 🔒 Standar Keamanan & Privasi
 
-Portal ini telah melalui serangkaian audit keamanan (SAST & DAST) dengan implementasi proteksi aktif:
-
-### 1. Content Security Policy (CSP) & Security Headers
-Dikonfigurasi secara terpusat pada `next.config.ts`:
-- **`Content-Security-Policy`**: Membatasi eksekusi skrip hanya dari sumber internal terpercaya (`'self'`), melarang embedding iframe tidak sah (`frame-ancestors 'none'`), serta mengizinkan aset gambar upstream terverifikasi.
-- **`X-Frame-Options: DENY`**: Mencegah serangan Clickjacking.
-- **`X-Content-Type-Options: nosniff`**: Menangkal MIME-type sniffing exploit.
-- **`Strict-Transport-Security (HSTS)`**: Memaksa enkripsi HTTPS (`max-age=31536000; includeSubDomains; preload`).
-- **`Referrer-Policy: strict-origin-when-cross-origin`**: Menjaga kerahasiaan URL internal dari rujukan luar.
-
-### 2. Perlindungan XSS (Cross-Site Scripting)
-Seluruh konten HTML yang ditarik dari WordPress Gutenberg dan OpenSID wajib melalui proses sanitasi ketat (`lib/sanitize.ts`) menggunakan whitelist tag aman (`p`, `h1`-`h6`, `figure`, `figcaption`, `img`, `table`, dll). Semua tag skrip berbahaya, iframe, dan inline event handler (`onload`, `onerror`) dibuang sebelum dirender ke DOM.
-
-### 3. Rate Limiting Transparan Berstandar RFC
-Diterapkan pada seluruh rute `/api/*` melalui `middleware.ts` untuk memitigasi serangan DDoS dan Brute Force:
-- Header transparan yang disertakan: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, dan `X-RateLimit-Reset`.
-- Mengembalikan HTTP status `429 Too Many Requests` saat batas kuota request per menit terlampaui.
-
-### 4. Isolasi Kredensial & Sanitasi Git
-- Seluruh rahasia server (database password, API key, auth secret) diisolasi dalam file `.env` yang berada di dalam `.gitignore`.
-- Menggunakan script sanitasi pra-commit untuk memastikan tidak ada token atau file kredensial yang terunggah ke repositori publik.
-
-### 5. Atribut Tautan Eksternal Aman
-Semua tautan yang mengarah ke luar portal (OpenSID, media sosial, Google Maps) wajib menggunakan atribut:
-```html
-target="_blank" rel="noopener noreferrer"
-```
-guna mencegah kerentanan *Tabnabbing* / `window.opener` hijacking.
+- **Enkripsi Transmisi:** Seluruh komunikasi data dilindungi dengan sertifikat SSL/TLS (HTTPS).
+- **Perlindungan Data Warga:** Sistem tidak mengekspos data pribadi sensitif kependudukan ke ruang publik sesuai kaidah regulasi perlindungan data pribadi.
+- **Sanitasi Konten:** Seluruh konten artikel publik disaring secara ketat dari potensi skrip berbahaya.
+- **Tautan Aman:** Setiap tautan keluar menggunakan standar atribut keamanan untuk melindungi sesi pengguna.
 
 ---
 
-## 📂 Struktur Direktori Utama
-
-```
-next-banyuraden/
-├── app/                      # Next.js 15 App Router (Pages & API Routes)
-│   ├── api/                  # Endpoint API (external-news, pengumuman, iot, dll)
-│   ├── berita/               # Halaman arsip & detail berita ([slug])
-│   ├── pengumuman/           # Halaman pengumuman resmi & agenda
-│   ├── profil/               # Profil kalurahan & pamong
-│   ├── layout.tsx            # Root layout & meta tags resmi
-│   └── page.tsx              # Beranda utama
-├── components/               # Komponen UI modular
-│   ├── layout/               # Header, Footer, MobileNav
-│   └── ui/                   # Komponen Radix, Button, Card, ImageFallback
-├── lib/                      # Helper, services, sanitasi XSS, upstream API client
-├── prisma/                   # Schema database & seeder
-├── public/                   # Asset statis (logo, GeoJSON, cover default)
-├── styles/                   # Global CSS & Gutenberg gallery grid styling
-```
-
----
-
-## 📞 Kontak & Sekretariat Resmi
+## 📞 Sekretariat & Kontak Resmi
 
 **Pemerintah Kalurahan Banyuraden**  
-- **Alamat Kantor:** Jl. Ringroad Barat, Banyuraden, Kapanewon Gamping, Kabupaten Sleman, D.I. Yogyakarta 55293  
-- **Telepon / Fax:** (0274) 621626  
-- **WhatsApp Pelayanan:** 0896-1262-4627  
-- **Email Resmi:** [desa.banyuraden@gmail.com](mailto:desa.banyuraden@gmail.com)  
-- **Instagram:** [@kalurahan.banyuraden](https://www.instagram.com/kalurahan.banyuraden)  
-- **YouTube:** [Kalurahan Banyuraden](https://www.youtube.com/@KalurahanBanyuraden)  
-- **Facebook:** [Kalurahan Banyuraden](https://www.facebook.com/kalurahan.banyuraden.3)  
+- **Alamat:** Jl. Ringroad Barat, Banyuraden, Kapanewon Gamping, Kabupaten Sleman, D.I. Yogyakarta 55293  
+- **Telepon:** (0274) 621626  
+- **Hotline Pelayanan & Ambulans:** 0896-1262-4627  
+- **Email:** [desa.banyuraden@gmail.com](mailto:desa.banyuraden@gmail.com)  
+- **Media Sosial:**  
+  - Instagram: [@kalurahan.banyuraden](https://www.instagram.com/kalurahan.banyuraden)  
+  - YouTube: [Kalurahan Banyuraden](https://www.youtube.com/@KalurahanBanyuraden)  
+  - Facebook: [Kalurahan Banyuraden](https://www.facebook.com/kalurahan.banyuraden.3)
 
 ---
-*Dikembangkan dengan dedikasi untuk transparansi dan kemajuan pelayanan warga Kalurahan Banyuraden.*
+*Dikelola oleh Pemerintah Kalurahan Banyuraden untuk kemudahan pelayanan dan transparansi informasi publik.*

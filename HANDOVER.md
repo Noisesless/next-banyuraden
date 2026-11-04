@@ -1,9 +1,9 @@
 # 📋 HANDOVER DOCUMENT - KALURAHAN BANYURADEN PORTAL
 
 **Project:** Portal Web Kalurahan Banyuraden  
-**Date:** July 24, 2026  
-**Last Session:** Session 10 - UI/UX Redesign & Photo Integration  
-**Status:** In Progress - Ready for Next Session  
+**Date:** November 4, 2026  
+**Last Session:** Session 15 - Navigation Overhaul, SDGs 18 Indikator, Layanan Ambulans & Zero-Leak Hardening  
+**Status:** 🟢 Live Production Ready (Verified on banyuraden.smartdesa.net)  
 
 ---
 
@@ -413,14 +413,53 @@ eactCompiler: true + optimizePackageImports) to resolve compiler warnings.
 
 ---
 
+## 🚀 SESSION 15 - NAVIGATION OVERHAUL, SDGS 18 INDIKATOR, LAYANAN AMBULANS & ZERO LEAK HARDENING
+**Date:** November 4, 2026  
+**Target:** https://banyuraden.smartdesa.net  
+**Status:** 🟢 VERIFIED & PRODUCTION READY (HTTP 200 OK / 307 Redirects)
+
+### Actions Completed:
+1. **Pembaruan Navigasi & Layanan Inovasi Kalurahan:**
+   - **Pengaduan Masyarakat:** Diterapkan server redirect HTTP 307 di `next.config.ts` dan `middleware.ts` dari `/pengaduan` ke portal OpenSID resmi `https://banyuraden.sleman-desa.id/pengaduan`. Navigasi pada `Header.tsx`, `MobileNavigation.tsx`, dan `Footer.tsx` disinkronkan langsung ke URL OpenSID.
+   - **SiPenTa (Sistem Pencegahan Stunting):** Menggantikan Posyandu Digital. Menu navigasi dan route `/posyandu` di-redirect 307 ke aplikasi pencegahan stunting `https://previa.clasnet.my.id/`.
+   - **Layanan Ambulans Siaga Kalurahan:** Menggantikan Perpustakaan Digital. Route `/pustaka` di-redirect 307 ke `/layanan-ambulans`. Halaman baru [`app/layanan-ambulans/page.tsx`](file:///d:/Project/next_banyuraden_main/app/layanan-ambulans/page.tsx) selesai dibuat berdasarkan **Peraturan Lurah No. 8 Tahun 2023** dan **Keputusan Lurah No. 11 Tahun 2024**, beroperasi 24 jam gratis (bebas biaya sewa) bagi warga Banyuraden, dilengkapi kontak darurat Telepon Kalurahan `(0274) 621626` dan WhatsApp Call Center `0896-1262-4627`.
+   - **Lapak Digital OpenSID:** Sumber data produk lapak diselaraskan langsung ke canonical domain OpenSID Banyuraden `https://banyuraden.sleman-desa.id/lapak`. Hostname `www.banyuraden.sleman-desa.id` didaftarkan ke `remotePatterns` di `next.config.ts` dan ditambahkan tautan belanja langsung ke lapak resmi desa.
+   - **Survei Kepuasan Masyarakat:** Menggantikan Teknologi Tepat Guna (TTG). Route `/ttg` di-redirect 307 ke formulir survei resmi `https://banyuradensid.slemankab.go.id/home/form-survei-kepuasan-masyarakat/`.
+   - **Layanan Mandiri Warga:** Tombol CTA pada `/layanan-mandiri` di-redirect ke `https://banyuraden.sleman-desa.id/layanan-mandiri/masuk`.
+
+2. **SDGs 18 Indikator Permendesa No. 21/2020 & OpenSID Integration:**
+   - Menghubungkan scraper SDGs secara live ke OpenSID Banyuraden (`https://banyuraden.sleman-desa.id/sdgs`) menghasilkan skor riil desa 46.91%.
+   - Mengembangkan API route `/api/sdgs/detail/[goal]` dengan dataset 18 indikator lengkap Permendesa No. 21/2020 (skor capaian, target terukur, volume capaian, dan rekomendasi aksi desa).
+   - Memperbaiki modal dialog interaktif SDGs di frontend; seluruh 18 tujuan kini menampilkan rincian indikator komprehensif tanpa pesan kendala "Data detail tidak tersedia untuk tujuan ini".
+
+3. **Cover Berita Slemankab SID & Fallback:**
+   - Sinkronisasi scraper berita WordPress REST API (`/api/external-news`) untuk mengambil gambar cover asli via `yoast_head_json.og_image[0].url` atau featured media endpoint.
+   - Fallback otomatis ke `/images/banyuraden-cover.jpg` jika berita tidak memiliki cover asli.
+
+4. **Zero Memory Leak Hardening & Legalitas Data:**
+   - Pembatasan in-memory cache proxy scraping dengan batas tegas `MAX_CACHE_ENTRIES = 100` dan auto-eviction LRU/FIFO.
+   - Pemasangan `AbortController` timeout (8-10 detik) pada seluruh fetch eksternal untuk mencegah zombie connection.
+   - Verifikasi legalitas scraping: data yang diakses merupakan informasi publik berkala sesuai UU No. 14/2008 (KIP) dan UU No. 27/2022 (PDP) tanpa pembocoran data pribadi rahasia.
+   - Pembersihan folder `.docs/` di repositori lokal, GitHub, dan VPS produksi untuk menjaga kebersihan dan keamanan konfigurasi internal.
+
+5. **Production Build & Nargaroth VPS Deployment:**
+   - Kompilasi build lokal Next.js 15 sukses menghasilkan 140/140 static & dynamic pages tanpa error.
+   - Seluruh perubahan di-sync via SCP ke VPS Nargaroth (`/home/next-banyuraden/htdocs/banyuraden.smartdesa.net/`).
+   - Eksekusi script rebuild di VPS berhasil, PM2 cluster (2 worker) reload dengan zero-downtime, dan seluruh route terverifikasi live dengan status HTTP 200 / HTTP 307.
+
+---
+
 ## ⏭️ NEXT STEPS FOR NEXT SESSION
 
-1. **Check current state** - Dev server running actively on http://localhost:5091 (npm run dev).
-2. **Review security audit documentation** - Located at .docs/security-audit.md.
-3. **Primary state snapshot** - Up-to-date at app-context.md.
+1. **Pemeliharaan Cache & Upstream Monitor:**
+   - Memantau berkala performa in-memory cache OpenSID dan WordPress Slemankab pada traffic jam kerja.
+2. **Snapshot State:**
+   - `app-context.md` dan `README.md` ter-update sebagai sumber kebenaran (SSOT) konfigurasi terkini.
+3. **Backup Otomatis:**
+   - Verifikasi backup basis data lokal MySQL dan GeoJSON padukuhan di lingkungan server.
 
 ---
 
 **End of Handover Document**  
 **Session Ended:** November 4, 2026  
-**Ready to Continue:** Yes, dev server operational and secured.
+**Ready to Continue:** Yes, server produksi aktif, stabil, dan seluruh fitur terverifikasi.
