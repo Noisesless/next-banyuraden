@@ -93,43 +93,51 @@ function NewsContent({
         return () => window.removeEventListener("resize", updatePostsPerPage);
     }, []);
 
-    // Load categories and archives for dropdowns
+    // Load categories and archives for dropdowns via API
     useEffect(() => {
         async function loadFilters() {
             try {
-                const { getCategories, getArchiveDates } = await import("@/lib/opensid");
-                const [categoriesData, archivesData] = await Promise.all([getCategories(), getArchiveDates()]);
+                const [catRes, archRes] = await Promise.all([
+                    fetch("/api/external-news?categories=true").then((r) => r.json()),
+                    fetch("/api/external-news?archives=true").then((r) => r.json()),
+                ]);
 
-                setCategories((categoriesData as Category[]) ?? []);
-                setArchives(
-                    (archivesData as Array<{ key: string; displayText: string; count: number }>)?.slice(0, 24) ??
-                        []
-                ); // Show up to 2 years of archives
-            } catch {}
+                if (catRes.success && catRes.data) {
+                    setCategories(catRes.data as Category[]);
+                }
+                if (archRes.success && archRes.data) {
+                    setArchives(archRes.data.slice(0, 24));
+                }
+            } catch (err) {
+                console.warn("Failed to load news filters:", err);
+            }
         }
 
         loadFilters();
     }, []);
 
-    // Load posts
+    // Load posts via API (banyuradensid.slemankab.go.id + OpenSID fallback)
     useEffect(() => {
         async function loadPosts() {
             try {
                 setLoading(true);
                 setError(null);
 
-                let allPosts: Post[] = [];
+                const params = new URLSearchParams({ limit: "100" });
+                if (searchTerm) params.set("search", searchTerm);
 
-                if (searchTerm) {
-                    // Search functionality
-                    const { searchPosts } = await import("@/lib/opensid");
-                    const searchResult = await searchPosts(searchTerm, 1);
-                    allPosts = (searchResult as { posts?: Post[] })?.posts || [];
-                } else {
-                    // Get all posts first, then filter client-side
-                    const { getPosts } = await import("@/lib/opensid");
-                    const postsResult = await getPosts(1, undefined, undefined);
-                    allPosts = postsResult?.posts || [];
+                const res = await fetch(`/api/external-news?${params.toString()}`);
+                const json = await res.json();
+
+                let allPosts: Post[] = [];
+                if (json.success && Array.isArray(json.data)) {
+                    allPosts = json.data.map((p: any) => ({
+                        ...p,
+                        id: parseInt(p.id, 10) || p.id,
+                        date: p.publishedAt || p.date,
+                        featuredImage: p.featuredImage || "/images/banyuraden-cover.jpg",
+                        featuredImageAlt: p.featuredImageAlt || p.title,
+                    }));
                 }
 
                 // Apply filters
@@ -140,13 +148,12 @@ function NewsContent({
                     const category = categories.find((c) => c.slug === selectedCategory);
                     if (category) {
                         if (category.id === 0) {
-                            // ID 0 = uncategorized posts
                             filteredPosts = filteredPosts.filter(
                                 (post) => post.categories.length === 0 || post.categories[0].id === 0
                             );
                         } else {
                             filteredPosts = filteredPosts.filter((post) =>
-                                post.categories.some((cat) => cat.id === category.id)
+                                post.categories.some((cat) => cat.id === category.id || cat.slug === category.slug)
                             );
                         }
                     }
@@ -164,17 +171,14 @@ function NewsContent({
                 // Apply sorting
                 const sortedPosts = [...filteredPosts];
                 switch (selectedSort) {
-                    case "terbaru":
-                        sortedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                        break;
                     case "terlama":
                         sortedPosts.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         break;
                     case "terpopuler":
                         sortedPosts.sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
                         break;
+                    case "terbaru":
                     default:
-                        // Default to newest first
                         sortedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                 }
 
@@ -188,7 +192,6 @@ function NewsContent({
                     setTotalPosts(sortedPosts.length);
                     setTotalPages(Math.ceil(sortedPosts.length / postsPerPage));
                 } else {
-                    // No results - show empty state
                     setPosts([]);
                     setTotalPosts(sortedPosts.length);
                     setTotalPages(Math.ceil(sortedPosts.length / postsPerPage) || 1);

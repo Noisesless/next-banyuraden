@@ -95,7 +95,7 @@ function NewsDetailContent() {
     const [error, setError] = useState<string | null>(null);
     const [viewCount, setViewCount] = useState(0);
 
-    // Load post and related posts
+    // Load post and related posts via API
     useEffect(() => {
         async function loadPost() {
             if (!slug) return;
@@ -104,28 +104,39 @@ function NewsDetailContent() {
                 setLoading(true);
                 setError(null);
 
-                // Get post by slug
-                const { getPostBySlug, getPosts } = await import("@/lib/opensid");
-                const postData = (await getPostBySlug(slug)) as Post | null;
+                const res = await fetch(`/api/external-news?slug=${encodeURIComponent(slug)}`);
+                const json = await res.json();
 
-                if (!postData) {
+                if (!json.success || !json.data) {
                     setError("Berita tidak ditemukan");
                     return;
                 }
 
+                const postData = {
+                    ...json.data,
+                    id: parseInt(json.data.id, 10) || json.data.id,
+                    date: json.data.publishedAt || json.data.date,
+                    featuredImage: json.data.featuredImage || "/images/banyuraden-cover.jpg",
+                    featuredImageAlt: json.data.featuredImageAlt || json.data.title,
+                } as Post;
+
                 setPost(postData);
-                setViewCount(postData.viewCount);
+                setViewCount(postData.viewCount || 25);
 
-                // Load related posts (posts with same categories)
-                if (postData.categories.length > 0) {
-                    const categoryId = postData.categories[0].id;
-                    const relatedData = await getPosts(1, 3, categoryId);
-
-                    if (relatedData) {
-                        // Exclude current post from related posts
-                        const filtered = relatedData.posts.filter((p: Post) => p.id !== postData.id);
-                        setRelatedPosts(filtered);
-                    }
+                // Load related posts from API
+                const relRes = await fetch("/api/external-news?limit=5");
+                const relJson = await relRes.json();
+                if (relJson.success && Array.isArray(relJson.data)) {
+                    const filtered = relJson.data
+                        .filter((p: any) => p.slug !== slug)
+                        .slice(0, 3)
+                        .map((p: any) => ({
+                            ...p,
+                            id: parseInt(p.id, 10) || p.id,
+                            date: p.publishedAt || p.date,
+                            featuredImage: p.featuredImage || "/images/banyuraden-cover.jpg",
+                        }));
+                    setRelatedPosts(filtered);
                 }
             } catch {
                 setError("Gagal memuat berita. Silakan coba lagi.");

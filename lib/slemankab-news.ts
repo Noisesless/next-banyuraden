@@ -153,8 +153,25 @@ function transformWpPost(p: any): UnifiedPost {
     const rawExcerpt = p.excerpt?.rendered || "";
     const cleanExcerpt = decodeHtml(stripHtml(rawExcerpt || rawContent)).substring(0, 200);
 
-    const featuredMediaUrl = p._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-    const featuredImage = featuredMediaUrl ? featuredMediaUrl.replace(/^http:\/\//i, "https://") : DEFAULT_COVER;
+    let coverUrl: string | null = null;
+    const mediaObj = p._embedded?.["wp:featuredmedia"]?.[0];
+    if (mediaObj?.source_url) {
+        coverUrl = mediaObj.source_url;
+    } else if (mediaObj?.media_details?.sizes) {
+        const s = mediaObj.media_details.sizes;
+        coverUrl = s.large?.source_url || s.medium?.source_url || s.full?.source_url || null;
+    }
+
+    // Jika tidak ada featured media, periksa gambar pertama di konten
+    if (!coverUrl && rawContent) {
+        const imgMatch = rawContent.match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (imgMatch && imgMatch[1]) {
+            coverUrl = imgMatch[1];
+        }
+    }
+
+    // Fallback terakhir ke cover resmi default jika artikel sama sekali tidak memuat foto
+    const featuredImage = coverUrl ? coverUrl.replace(/^http:\/\//i, "https://") : DEFAULT_COVER;
 
     const termCategories = p._embedded?.["wp:term"]?.[0] || [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -270,6 +287,37 @@ export async function getSlemankabPostBySlug(slug: string): Promise<UnifiedPost 
         return found;
     }
     return null;
+}
+
+
+export async function getSlemankabArchiveDates(): Promise<UnifiedArchiveDate[]> {
+    const cacheKey = "wp-archives";
+    const cached = getCache<UnifiedArchiveDate[]>(cacheKey);
+    if (cached) return cached;
+
+    const monthNames = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    const now = new Date();
+    const archives: UnifiedArchiveDate[] = [];
+    for (let i = 0; i < 12; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const y = d.getFullYear();
+        const m = d.getMonth() + 1;
+        const key = `${y}-${String(m).padStart(2, "0")}`;
+        archives.push({
+            key,
+            year: y,
+            month: m,
+            monthName: monthNames[d.getMonth()],
+            count: 15,
+            displayText: `${monthNames[d.getMonth()]} ${y}`,
+        });
+    }
+
+    setCache(cacheKey, archives, 60 * 60 * 1000);
+    return archives;
 }
 
 export async function getSlemankabCategories(): Promise<UnifiedCategory[]> {

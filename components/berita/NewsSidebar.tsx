@@ -42,21 +42,26 @@ export default function NewsSidebar({ currentCategory, currentTag, className = "
             try {
                 setLoading(true);
 
-                // Import OpenSID library
-                const opensid = await import("@/lib/opensid");
-                const [recentPostsData, categoriesData, tagsData, archivesData] = await Promise.all([
-                    opensid.getPosts(1, 10),
-                    opensid.getCategories(),
-                    opensid.getTags(),
-                    opensid.getArchiveDates(),
+                const [postsRes, catRes, archRes] = await Promise.all([
+                    fetch("/api/external-news?limit=8").then((r) => r.json()),
+                    fetch("/api/external-news?categories=true").then((r) => r.json()),
+                    fetch("/api/external-news?archives=true").then((r) => r.json()),
                 ]);
 
-                setPopularPosts((recentPostsData as { posts?: Post[] })?.posts ?? []);
-                setCategories((categoriesData as Category[]) ?? []);
-                setTags((tagsData as TagType[])?.slice(0, 10) ?? []); // Hanya 10 tags pertama
-                setArchives((archivesData as Array<ArchiveDate>)?.slice(0, 12) ?? []); // Hanya 12 bulan terakhir
+                if (postsRes.success && Array.isArray(postsRes.data)) {
+                    setPopularPosts(postsRes.data.map((p: any) => ({
+                        ...p,
+                        id: parseInt(p.id, 10) || p.id,
+                        date: p.publishedAt || p.date,
+                    })));
+                }
+                if (catRes.success && Array.isArray(catRes.data)) {
+                    setCategories(catRes.data);
+                }
+                if (archRes.success && Array.isArray(archRes.data)) {
+                    setArchives(archRes.data.slice(0, 12));
+                }
             } catch {
-                // Set empty arrays when API is not available
                 setPopularPosts([]);
                 setCategories([]);
                 setTags([]);
