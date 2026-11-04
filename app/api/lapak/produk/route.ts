@@ -42,7 +42,7 @@ type UpstreamResponse = {
     meta?: { pagination?: LapakPagination };
 };
 
-const BASE_URL = "https://www.banyuraden.sleman-desa.id";
+const BASE_URL = "https://banyuraden.sleman-desa.id";
 
 function clampNumber(value: number, min: number, max: number) {
     return Math.min(max, Math.max(min, value));

@@ -55,7 +55,7 @@ export function Header() {
         { href: "/idm", label: "IDM", icon: FileText },
         { href: "/sdgs", label: "SDGs", icon: Globe },
         { href: "/iot", label: "IoT", icon: Cpu },
-        { href: "https://banyuraden.id/index.php/pengaduan", label: t("navigation.pengaduan"), icon: MessageSquare, external: true },
+        { href: "https://banyuraden.sleman-desa.id/pengaduan", label: t("navigation.pengaduan"), icon: MessageSquare, external: true },
     ];
 
     const pemerintahanSubItems = [
@@ -73,10 +73,10 @@ export function Header() {
     ];
 
     const inovasiSubItems = [
-        { href: "/posyandu", label: "Posyandu Digital" },
-        { href: "/pustaka", label: "Perpustakaan Digital" },
+        { href: "https://previa.clasnet.my.id/", label: "SiPenTa", external: true },
+        { href: "/layanan-ambulans", label: "Layanan Ambulans" },
         { href: "/lapak-digital", label: "Lapak Digital" },
-        { href: "/ttg", label: "Teknologi Tepat Guna" },
+        { href: "https://banyuradensid.slemankab.go.id/home/form-survei-kepuasan-masyarakat/", label: "Survei Kepuasan Masyarakat", external: true },
     ];
 
     // Categorized statistik sub-items

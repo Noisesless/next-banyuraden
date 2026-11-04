@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Store } from "lucide-react";
+import { Store, ExternalLink } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -100,8 +100,20 @@ function LapakContent({ page }: { page: number }) {
                         <Store className="h-10 w-10 text-emerald-700" />
                     </div>
                     <h1 className="text-4xl font-bold text-primary">Lapak Digital</h1>
-                    <p className="text-gray-600 max-w-2xl mx-auto">Produk UMKM Kalurahan Banyuraden yang ditampilkan dari Lapak.</p>
-                    <p className="text-xs text-muted-foreground">Sumber data: banyuraden.sleman-desa.id</p>
+                    <p className="text-gray-600 max-w-2xl mx-auto">Produk UMKM Kalurahan Banyuraden yang terintegrasi langsung dari portal Lapak Desa.</p>
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                        <a
+                            href="https://banyuraden.sleman-desa.id/lapak"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Button variant="outline" size="sm" className="text-xs border-emerald-300 hover:bg-emerald-50 text-emerald-800">
+                                Buka Lapak Desa Resmi (banyuraden.sleman-desa.id)
+                                <ExternalLink className="h-3.5 w-3.5 ml-1.5" />
+                            </Button>
+                        </a>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Sumber data langsung: banyuraden.sleman-desa.id/lapak</p>
                 </div>
 
                 {loading && (

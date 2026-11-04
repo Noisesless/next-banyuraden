@@ -16,12 +16,12 @@ export function Footer() {
         { href: "/profil/sejarah", label: "Sejarah Kalurahan" },
         { href: "/pemerintahan", label: t("navigation.pemerintahan") },
         { href: "/keuangan", label: t("navigation.keuangan") },
-        { href: "https://banyuraden.id/index.php/pengaduan", label: t("navigation.kontak"), external: true },
+        { href: "https://banyuraden.sleman-desa.id/pengaduan", label: t("navigation.kontak"), external: true },
     ];
 
     const layananLinks = [
         { href: "https://banyuraden.sleman-desa.id/layanan-mandiri/masuk", label: "Layanan Mandiri", external: true },
-        { href: "https://banyuraden.id/index.php/pengaduan", label: "Pengaduan Masyarakat", external: true },
+        { href: "https://banyuraden.sleman-desa.id/pengaduan", label: "Pengaduan Masyarakat", external: true },
         { href: "/iot", label: "IoT Monitoring" },
         { href: "/statistik", label: "Data Statistik" },
     ];

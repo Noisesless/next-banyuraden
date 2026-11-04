@@ -43,7 +43,7 @@ type UpstreamResponse = {
     meta?: { pagination?: LapakPagination };
 };
 
-const BASE_URL = "https://www.banyuraden.sleman-desa.id";
+const BASE_URL = "https://banyuraden.sleman-desa.id";
 
 function mapItem(item: UpstreamResponse["data"][number]): LapakProduct {
     const a = item.attributes;
@@ -60,7 +60,7 @@ function mapItem(item: UpstreamResponse["data"][number]): LapakProduct {
         category: a.kategori?.kategori ?? null,
         sellerName: a.pelapak?.penduduk?.nama ?? null,
         waUrl: a.pesan_wa ?? null,
-        sourceUrl: `${BASE_URL}/index.php/lapak`,
+        sourceUrl: "https://banyuraden.sleman-desa.id/lapak",
     };
 }
 

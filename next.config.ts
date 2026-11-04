@@ -62,6 +62,32 @@ const nextConfig: NextConfig = {
         ];
     },
 
+
+    async redirects() {
+        return [
+            {
+                source: '/pengaduan',
+                destination: 'https://banyuraden.sleman-desa.id/pengaduan',
+                permanent: false,
+            },
+            {
+                source: '/posyandu',
+                destination: 'https://previa.clasnet.my.id/',
+                permanent: false,
+            },
+            {
+                source: '/ttg',
+                destination: 'https://banyuradensid.slemankab.go.id/home/form-survei-kepuasan-masyarakat/',
+                permanent: false,
+            },
+            {
+                source: '/pustaka',
+                destination: '/layanan-ambulans',
+                permanent: false,
+            },
+        ];
+    },
+
     images: {
         formats: ['image/avif', 'image/webp'],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -156,6 +182,18 @@ const nextConfig: NextConfig = {
             {
                 protocol: 'https',
                 hostname: 'banyuraden.sleman-desa.id',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.banyuraden.sleman-desa.id',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'http',
+                hostname: 'www.banyuraden.sleman-desa.id',
                 port: '',
                 pathname: '/**',
             },

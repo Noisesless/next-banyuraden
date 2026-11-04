@@ -35,6 +35,11 @@ function getIp(req: NextRequest): string {
 export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
+    // Redirect /pengaduan to official OpenSID pengaduan
+    if (pathname === "/pengaduan" || pathname === "/pengaduan/") {
+        return NextResponse.redirect("https://banyuraden.sleman-desa.id/pengaduan", 307);
+    }
+
     // Explicitly block /api/pengaduan to prevent any data exposure (TNG-01)
     if (pathname === "/api/pengaduan" || pathname.startsWith("/api/pengaduan/")) {
         return new NextResponse(JSON.stringify({ success: false, error: "Endpoint /api/pengaduan has been permanently disabled" }), {

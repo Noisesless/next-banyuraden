@@ -35,6 +35,8 @@ import {
     CreditCard,
     ChevronRight,
     Sparkles,
+    Ambulance,
+    ClipboardCheck,
 } from "lucide-react";
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -74,7 +76,7 @@ export function MobileNavigation() {
             external: true,
         },
         {
-            href: "https://banyuraden.id/index.php/pengaduan",
+            href: "https://banyuraden.sleman-desa.id/pengaduan",
             label: translations.navigation.pengaduan,
             icon: MessageSquare,
             external: true,
@@ -90,7 +92,7 @@ export function MobileNavigation() {
         { href: "/idm", label: "IDM", icon: FileText },
         { href: "/sdgs", label: "SDGs", icon: Globe },
         { href: "/iot", label: "IoT", icon: Monitor },
-        { href: "https://banyuraden.id/index.php/pengaduan", label: translations.navigation.pengaduan, icon: MessageSquare, external: true },
+        { href: "https://banyuraden.sleman-desa.id/pengaduan", label: translations.navigation.pengaduan, icon: MessageSquare, external: true },
     ];
 
     // Additional items for sidebar
@@ -483,44 +485,35 @@ export function MobileNavigation() {
                                         Inovasi
                                     </div>
 
-                                    <Link
-                                        key="/posyandu"
-                                        href="/posyandu"
+                                    <a
+                                        key="sipenta"
+                                        href="https://previa.clasnet.my.id/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         onClick={() => setIsSidebarOpen(false)}
-                                        className={`flex items-center gap-3 px-3 py-3 text-sm rounded-md transition-all duration-200 mb-1 cursor-pointer ${
-                                            isActive("/posyandu")
-                                                ? "bg-primary text-primary-foreground font-medium"
-                                                : "hover:bg-accent hover:text-accent-foreground"
-                                        }`}
+                                        className="flex items-center gap-3 px-3 py-3 text-sm rounded-md transition-all duration-200 mb-1 cursor-pointer hover:bg-accent hover:text-accent-foreground"
                                     >
-                                        <Heart
-                                            className={`h-5 w-5 shrink-0 ${
-                                                isActive("/posyandu") ? "text-primary-foreground" : "text-primary"
-                                            }`}
-                                        />
-                                        <span className="truncate">Posyandu Digital</span>
-                                        {isActive("/posyandu") && (
-                                            <div className="ml-auto w-2 h-2 bg-current rounded-full" />
-                                        )}
-                                    </Link>
+                                        <Heart className="h-5 w-5 shrink-0 text-primary" />
+                                        <span className="truncate">SiPenTa</span>
+                                    </a>
 
                                     <Link
-                                        key="/pustaka"
-                                        href="/pustaka"
+                                        key="/layanan-ambulans"
+                                        href="/layanan-ambulans"
                                         onClick={() => setIsSidebarOpen(false)}
                                         className={`flex items-center gap-3 px-3 py-3 text-sm rounded-md transition-all duration-200 mb-1 cursor-pointer ${
-                                            isActive("/pustaka")
+                                            isActive("/layanan-ambulans")
                                                 ? "bg-primary text-primary-foreground font-medium"
                                                 : "hover:bg-accent hover:text-accent-foreground"
                                         }`}
                                     >
-                                        <BookOpen
+                                        <Ambulance
                                             className={`h-5 w-5 shrink-0 ${
-                                                isActive("/pustaka") ? "text-primary-foreground" : "text-primary"
+                                                isActive("/layanan-ambulans") ? "text-primary-foreground" : "text-primary"
                                             }`}
                                         />
-                                        <span className="truncate">Perpustakaan Digital</span>
-                                        {isActive("/pustaka") && (
+                                        <span className="truncate">Layanan Ambulans</span>
+                                        {isActive("/layanan-ambulans") && (
                                             <div className="ml-auto w-2 h-2 bg-current rounded-full" />
                                         )}
                                     </Link>
@@ -546,24 +539,17 @@ export function MobileNavigation() {
                                         )}
                                     </Link>
 
-                                    <Link
-                                        key="/ttg"
-                                        href="/ttg"
+                                    <a
+                                        key="survei-kepuasan"
+                                        href="https://banyuradensid.slemankab.go.id/home/form-survei-kepuasan-masyarakat/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         onClick={() => setIsSidebarOpen(false)}
-                                        className={`flex items-center gap-3 px-3 py-3 text-sm rounded-md transition-all duration-200 mb-1 cursor-pointer ${
-                                            isActive("/ttg")
-                                                ? "bg-primary text-primary-foreground font-medium"
-                                                : "hover:bg-accent hover:text-accent-foreground"
-                                        }`}
+                                        className="flex items-center gap-3 px-3 py-3 text-sm rounded-md transition-all duration-200 mb-1 cursor-pointer hover:bg-accent hover:text-accent-foreground"
                                     >
-                                        <Wrench
-                                            className={`h-5 w-5 shrink-0 ${
-                                                isActive("/ttg") ? "text-primary-foreground" : "text-primary"
-                                            }`}
-                                        />
-                                        <span className="truncate">Teknologi Tepat Guna</span>
-                                        {isActive("/ttg") && <div className="ml-auto w-2 h-2 bg-current rounded-full" />}
-                                    </Link>
+                                        <ClipboardCheck className="h-5 w-5 shrink-0 text-primary" />
+                                        <span className="truncate">Survei Kepuasan Masyarakat</span>
+                                    </a>
 
                                     
 
