@@ -15,6 +15,8 @@ export default function ImageFallback({
     _fallbackSrc = DEFAULT_COVER,
     alt = "",
     className = "",
+    unoptimized,
+    referrerPolicy,
     ...props
 }: ImageFallbackProps) {
     // Validate and normalize the source URL
@@ -45,11 +47,17 @@ export default function ImageFallback({
         }
     };
 
+    // External URLs (e.g. government domains protected by Cloudflare bot challenge)
+    // MUST bypass Next.js image optimizer server proxy to load directly in the client browser
+    const isExternal = typeof imgSrc === "string" && (imgSrc.startsWith("http://") || imgSrc.startsWith("https://"));
+
     return (
         <Image
             src={imgSrc}
             alt={alt}
             className={className}
+            unoptimized={unoptimized ?? isExternal}
+            referrerPolicy={referrerPolicy ?? (isExternal ? "no-referrer" : undefined)}
             onError={handleError}
             {...props}
         />

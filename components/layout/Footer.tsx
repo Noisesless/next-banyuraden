@@ -12,7 +12,7 @@ export function Footer() {
 
     const quickLinks = [
         { href: "/berita", label: t("navigation.berita") },
-        { href: "https://banyuraden.id/layanan-mandiri", label: t("navigation.layanan"), external: true },
+        { href: "https://banyuraden.sleman-desa.id/layanan-mandiri/masuk", label: t("navigation.layanan"), external: true },
         { href: "/profil/sejarah", label: "Sejarah Kalurahan" },
         { href: "/pemerintahan", label: t("navigation.pemerintahan") },
         { href: "/keuangan", label: t("navigation.keuangan") },
@@ -20,7 +20,7 @@ export function Footer() {
     ];
 
     const layananLinks = [
-        { href: "https://banyuraden.id/layanan-mandiri", label: "Layanan Mandiri", external: true },
+        { href: "https://banyuraden.sleman-desa.id/layanan-mandiri/masuk", label: "Layanan Mandiri", external: true },
         { href: "https://banyuraden.id/index.php/pengaduan", label: "Pengaduan Masyarakat", external: true },
         { href: "/iot", label: "IoT Monitoring" },
         { href: "/statistik", label: "Data Statistik" },

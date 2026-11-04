@@ -243,7 +243,7 @@ export function HomePageClient({ serverData }: { serverData: ServerData }) {
                     {/* Layanan Mandiri CTA Button */}
                     <div className="mt-16 flex justify-center">
                         <a
-                            href="https://banyuraden.id/layanan-mandiri"
+                            href="https://banyuraden.sleman-desa.id/layanan-mandiri/masuk"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group relative inline-flex items-center gap-4 px-8 py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-2xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-500 hover:scale-105 overflow-hidden border"

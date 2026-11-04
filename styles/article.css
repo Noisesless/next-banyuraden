@@ -176,6 +176,8 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    aspect-ratio: 4 / 3 !important;
+    width: 100% !important;
 }
 
 .article-content .wp-block-gallery img {

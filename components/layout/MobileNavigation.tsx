@@ -68,7 +68,7 @@ export function MobileNavigation() {
         { href: "/", label: translations.navigation.beranda, icon: Home },
         { href: "/berita", label: translations.navigation.berita, icon: Newspaper },
         {
-            href: "https://banyuraden.id/layanan-mandiri",
+            href: "https://banyuraden.sleman-desa.id/layanan-mandiri/masuk",
             label: translations.navigation.layanan,
             icon: FileText,
             external: true,
@@ -291,7 +291,7 @@ export function MobileNavigation() {
 
                                     <a
                                         key="/layanan"
-                                        href="https://banyuraden.id/layanan-mandiri"
+                                        href="https://banyuraden.sleman-desa.id/layanan-mandiri/masuk"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={() => setIsSidebarOpen(false)}
