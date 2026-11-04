@@ -59,6 +59,7 @@ const OPENSID_CONFIG = {
     fallbackUrl: `${FALLBACK_DOMAIN}/internal_api/arsip`,
     postsPerPage: 50, // Increased to show more posts per page
     cacheTimeout: 60 * 60 * 1000, // 1 jam cache
+    maxCacheEntries: 100, // Maximum cache entries to prevent memory leaks
 };
 
 // Default domain untuk fallback image URLs
@@ -67,17 +68,31 @@ const DEFAULT_DOMAIN = FALLBACK_DOMAIN;
 // Cache untuk menyimpan data sementara
 const cache = new Map<string, { data: unknown; timestamp: number }>();
 
-
-// Helper function untuk cache
+// Helper function untuk cache dengan auto-eviction & capacity limit
 function getCachedData(key: string) {
     const cached = cache.get(key);
-    if (cached && Date.now() - cached.timestamp < OPENSID_CONFIG.cacheTimeout) {
-        return cached.data;
+    if (!cached) return null;
+    if (Date.now() - cached.timestamp >= OPENSID_CONFIG.cacheTimeout) {
+        cache.delete(key);
+        return null;
     }
-    return null;
+    return cached.data;
 }
 
 function setCachedData(key: string, data: unknown) {
+    // Memory leak protection: bounded cache with FIFO eviction
+    if (cache.size >= OPENSID_CONFIG.maxCacheEntries) {
+        const now = Date.now();
+        for (const [k, v] of cache.entries()) {
+            if (now - v.timestamp >= OPENSID_CONFIG.cacheTimeout) {
+                cache.delete(k);
+            }
+        }
+        if (cache.size >= OPENSID_CONFIG.maxCacheEntries) {
+            const firstKey = cache.keys().next().value;
+            if (firstKey) cache.delete(firstKey);
+        }
+    }
     cache.set(key, { data, timestamp: Date.now() });
 }
 

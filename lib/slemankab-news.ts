@@ -52,6 +52,7 @@ export interface UnifiedArchiveDate {
 
 const DEFAULT_COVER = "/images/banyuraden-cover.jpg";
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache
+const MAX_CACHE_ENTRIES = 100; // Maximum cached endpoints/queries to prevent memory leaks
 const memoryCache = new Map<string, { data: unknown; expires: number }>();
 
 function getCache<T>(key: string): T | null {
@@ -65,6 +66,19 @@ function getCache<T>(key: string): T | null {
 }
 
 function setCache(key: string, data: unknown, ttl = CACHE_TTL_MS) {
+    // Memory leak protection: bounded cache with LRU/FIFO eviction
+    if (memoryCache.size >= MAX_CACHE_ENTRIES) {
+        const now = Date.now();
+        for (const [k, v] of memoryCache.entries()) {
+            if (v.expires <= now) {
+                memoryCache.delete(k);
+            }
+        }
+        if (memoryCache.size >= MAX_CACHE_ENTRIES) {
+            const firstKey = memoryCache.keys().next().value;
+            if (firstKey) memoryCache.delete(firstKey);
+        }
+    }
     memoryCache.set(key, { data, expires: Date.now() + ttl });
 }
 
