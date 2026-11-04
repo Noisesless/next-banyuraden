@@ -77,7 +77,6 @@ export function Header() {
         { href: "/pustaka", label: "Perpustakaan Digital" },
         { href: "/lapak-digital", label: "Lapak Digital" },
         { href: "/ttg", label: "Teknologi Tepat Guna" },
-        { href: "https://web-komunitas.vercel.app/", label: "Komunitas", external: true },
     ];
 
     // Categorized statistik sub-items

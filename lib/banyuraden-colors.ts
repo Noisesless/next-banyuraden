@@ -1,6 +1,6 @@
 /**
  * Banyuraden Village Official Color Palette
- * Based on docs/pondokrejo.md theme specification
+ * Based on docs/banyuraden.md theme specification
  */
 
 export const banyuradenColors = {

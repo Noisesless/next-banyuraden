@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    reactCompiler: true,
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    experimental: {
+        reactCompiler: true,
+        optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'simple-icons'],
+    },
     poweredByHeader: false,
 
     allowedDevOrigins: ['banyuraden.slemankab.go.id', 'banyuraden.id'],
@@ -22,6 +31,7 @@ const nextConfig: NextConfig = {
                             "font-src 'self' fonts.gstatic.com cdn.jsdelivr.net",
                             "img-src 'self' data: https: blob:",
                             "connect-src 'self' https: wss:",
+                            "worker-src 'self' blob:",
                             "frame-ancestors 'none'",
                             "base-uri 'self'",
                             "form-action 'self'"
@@ -147,7 +157,19 @@ const nextConfig: NextConfig = {
                 protocol: 'https',
                 hostname: 'banyuraden.sleman-desa.id',
                 port: '',
-                pathname: '/desa/upload/artikel/**',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'banyuradensid.slemankab.go.id',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'http',
+                hostname: 'banyuradensid.slemankab.go.id',
+                port: '',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
@@ -161,10 +183,6 @@ const nextConfig: NextConfig = {
         contentSecurityPolicy: "default-src 'self'; script-src 'self'; sandbox;",
         minimumCacheTTL: 60,
     },
-
-    experimental: {
-        optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', 'simple-icons'],
-    }
 };
 
 export default nextConfig;

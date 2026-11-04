@@ -2,7 +2,8 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import type { ApiResponse } from "@/lib/api-response";
-import { createSuccessResponse, createNotFoundResponse, createErrorResponse } from "@/lib/api-response";
+import { createSuccessResponse, createNotFoundResponse, createErrorResponse, createUnauthorizedResponse } from "@/lib/api-response";
+import { auth } from "@/auth";
 
 // Mock data (should be in a shared file or database)
 const mockPengumuman = [
@@ -100,6 +101,10 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<ApiResponse>> {
     try {
+        const session = await auth();
+        if (!session || (session.user as any)?.role !== "ADMIN") {
+            return NextResponse.json(createUnauthorizedResponse("Akses ditolak: autentikasi admin diperlukan"), { status: 401 });
+        }
         const { id: idParam } = await params;
         const id = parseInt(idParam);
 
@@ -158,6 +163,10 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<ApiResponse>> {
     try {
+        const session = await auth();
+        if (!session || (session.user as any)?.role !== "ADMIN") {
+            return NextResponse.json(createUnauthorizedResponse("Akses ditolak: autentikasi admin diperlukan"), { status: 401 });
+        }
         const { id: idParam } = await params;
         const id = parseInt(idParam);
 

@@ -9,6 +9,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import ImageFallback from "@/components/ui/custom/ImageFallback";
 import Link from "next/link";
 import { Calendar, Clock, User, ArrowLeft, Share2, MessageSquare, Eye, Tag, Folder } from "lucide-react";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import NewsSidebar from "@/components/berita/NewsSidebar";
 import type { Post } from "@/lib/opensid";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { env } from "process";
 
 // Share functionality
@@ -280,11 +282,12 @@ function NewsDetailContent() {
                 <div className="flex-1 w-full">
                     {/* Article Header */}
                     <Card className="mb-8 overflow-hidden pt-0">
-                        {/* Featured Image */}
-                        <div className="relative h-64 md:h-96">
-                            <Image
+                        {/* Featured Image - Real Cover with Fallback */}
+                        <div className="relative h-64 md:h-96 w-full overflow-hidden bg-slate-100">
+                            <ImageFallback
                                 src={post.featuredImage}
-                                alt={post.featuredImageAlt}
+                                _fallbackSrc="/images/banyuraden-cover.jpg"
+                                alt={post.featuredImageAlt || post.title}
                                 fill
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 100vw"
                                 className="object-cover"
@@ -379,7 +382,7 @@ function NewsDetailContent() {
                             <div className="prose prose-gray max-w-none mt-6">
                                 <div
                                     dangerouslySetInnerHTML={{
-                                        __html: post.content,
+                                        __html: sanitizeHtml(post.content),
                                     }}
                                     className="article-content"
                                 />
@@ -401,10 +404,11 @@ function NewsDetailContent() {
                                             href={`/berita/${relatedPost.slug}`}
                                             className="group block"
                                         >
-                                            <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
-                                                <Image
+                                            <div className="relative aspect-video rounded-lg overflow-hidden mb-3 bg-slate-100">
+                                                <ImageFallback
                                                     src={relatedPost.featuredImage}
-                                                    alt={relatedPost.featuredImageAlt}
+                                                    _fallbackSrc="/images/banyuraden-cover.jpg"
+                                                    alt={relatedPost.featuredImageAlt || relatedPost.title}
                                                     fill
                                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                                                     className="object-cover transition-transform duration-300 group-hover:scale-105"

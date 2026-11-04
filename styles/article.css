@@ -120,17 +120,97 @@
     @apply bg-gray-50/50;
 }
 
-/* Images */
+/* Images - controlled height and containment to prevent excessively tall pages */
 .article-content img {
-    @apply w-full h-auto rounded-lg shadow-sm my-6;
+    max-width: 100%;
+    height: auto;
+    max-height: 480px;
+    object-fit: contain;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    margin: 1.5rem auto;
+    display: block;
 }
 
 .article-content figure {
-    @apply my-6;
+    margin: 1.5rem 0;
 }
 
 .article-content figcaption {
-    @apply text-center text-sm text-gray-500 italic mt-2;
+    @apply text-center text-xs md:text-sm text-gray-500 italic mt-2;
+}
+
+/* Gutenberg Gallery & Nested Images Layout */
+.article-content .wp-block-gallery,
+.article-content figure.wp-block-gallery {
+    display: grid !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+    margin: 2rem 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+@media (min-width: 640px) {
+    .article-content .wp-block-gallery,
+    .article-content figure.wp-block-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .article-content .wp-block-gallery,
+    .article-content figure.wp-block-gallery {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+.article-content .wp-block-gallery figure,
+.article-content .wp-block-gallery .wp-block-image {
+    margin: 0 !important;
+    overflow: hidden !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.article-content .wp-block-gallery img {
+    width: 100% !important;
+    height: 220px !important;
+    max-height: 220px !important;
+    object-fit: cover !important;
+    margin: 0 !important;
+    display: block !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: transform 0.3s ease, filter 0.3s ease !important;
+}
+
+.article-content .wp-block-gallery img:hover {
+    transform: scale(1.04) !important;
+}
+
+/* Standalone .wp-block-image */
+.article-content .wp-block-image:not(.wp-block-gallery *) {
+    margin: 1.5rem auto;
+    text-align: center;
+    max-width: 100%;
+}
+
+.article-content .wp-block-image:not(.wp-block-gallery *) img {
+    max-width: 100%;
+    max-height: 480px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    display: inline-block;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
 }
 
 /* Horizontal Rule */

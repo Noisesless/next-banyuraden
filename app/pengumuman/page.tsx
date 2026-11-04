@@ -1,271 +1,349 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
     Megaphone,
     Calendar,
     Clock,
-    Tag,
-    FileText,
-    Bell,
+    User,
+    Search,
+    X,
+    ExternalLink,
     AlertCircle,
-    CheckCircle,
-    Users,
-    Building,
+    Bell,
+    Briefcase,
+    FileText,
+    Eye,
+    ChevronRight,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import ImageFallback from "@/components/ui/custom/ImageFallback";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
+import { sanitizeHtml } from "@/lib/sanitize";
+
+interface Pengumuman {
+    id: number;
+    judul: string;
+    konten: string;
+    ringkasan?: string;
+    prioritas: string;
+    kategori: string;
+    status: string;
+    publishedAt: string;
+    penulis: string;
+    views: number;
+    slug?: string;
+    featuredImage?: string;
+}
 
 export default function PengumumanPage() {
+    const [items, setItems] = useState<Pengumuman[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [selectedItem, setSelectedItem] = useState<Pengumuman | null>(null);
+
+    useEffect(() => {
+        async function fetchPengumuman() {
+            try {
+                setLoading(true);
+                setError(null);
+                const res = await fetch("/api/pengumuman?limit=50");
+                const json = await res.json();
+                if (json.data && Array.isArray(json.data)) {
+                    setItems(json.data);
+                } else if (json.data?.data) {
+                    setItems(json.data.data);
+                }
+            } catch (err) {
+                console.error("Failed to load pengumuman:", err);
+                setError("Gagal memuat daftar agenda dan pengumuman.");
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchPengumuman();
+    }, []);
+
+    // Filter items
+    const filteredItems = items.filter((item) => {
+        const matchCategory =
+            selectedCategory === "all" ||
+            item.kategori.toLowerCase().includes(selectedCategory.toLowerCase());
+        const matchSearch =
+            !searchTerm ||
+            item.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.konten.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchCategory && matchSearch;
+    });
+
+    const formatDate = (dateString: string) => {
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString("id-ID", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+            });
+        } catch {
+            return dateString;
+        }
+    };
+
     return (
-        <div className="container mx-auto px-4 py-4">
-            {/* Page Title */}
-            <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-full mb-4">
-                    <Megaphone className="h-10 w-10 text-blue-600" />
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+            {/* Header Area */}
+            <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-full mb-3">
+                    <Megaphone className="h-8 w-8 text-primary" />
                 </div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">Pengumuman Kalurahan</h1>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Informasi resmi dan pengumuman penting dari pemerintah Kalurahan Banyuraden untuk seluruh warga
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-2">
+                    Pengumuman & Agenda Kalurahan
+                </h1>
+                <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
+                    Informasi resmi, agenda kegiatan pamong, pengumuman penting, dan lowongan pamong dari Pemerintah Kalurahan Banyuraden
                 </p>
             </div>
 
-            {/* Main Content */}
-            <Card className="mb-4">
-                <CardHeader>
-                    <CardTitle className="text-2xl text-center">Halaman dalam Pengembangan</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-center py-4">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
-                            <Megaphone className="h-8 w-8 text-amber-600" />
-                        </div>
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                            Portal Pengumuman Sedang Disiapkan
-                        </h2>
-                        <p className="text-gray-600 mb-4 max-w-2xl mx-auto">
-                            Kami sedang mengembangkan portal pengumuman yang terintegrasi untuk memberikan informasi
-                            resmi dan penting kepada seluruh warga Kalurahan Banyuraden.
-                        </p>
+            {/* Controls Bar: Search & Category Filter */}
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8 bg-card border border-border p-4 rounded-xl shadow-sm">
+                {/* Search Box */}
+                <div className="relative w-full md:w-80">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        type="text"
+                        placeholder="Cari agenda atau pengumuman..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-9 pr-8 h-10 w-full"
+                    />
+                    {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm("")}
+                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        >
+                            <X className="h-4 w-4" />
+                        </button>
+                    )}
+                </div>
 
-                        <div className="space-y-4 max-w-4xl mx-auto">
-                            {/* Announcement Categories */}
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <h3 className="font-semibold text-gray-900 mb-4">
-                                    Kategori Pengumuman yang Akan Ditampilkan:
-                                </h3>
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <AlertCircle className="h-8 w-8 text-red-600" />
-                                        </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Penting & Darurat</h4>
-                                        <p className="text-sm text-gray-600">Info krusial & kejadian darurat</p>
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <Building className="h-8 w-8 text-blue-600" />
-                                        </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Pemerintahan</h4>
-                                        <p className="text-sm text-gray-600">Kebijakan & program kalurahan</p>
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <CheckCircle className="h-8 w-8 text-green-600" />
-                                        </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Layanan</h4>
-                                        <p className="text-sm text-gray-600">Info layanan publik & admin</p>
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <Calendar className="h-8 w-8 text-purple-600" />
-                                        </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Acara & Agenda</h4>
-                                        <p className="text-sm text-gray-600">Jadwal kegiatan resmi</p>
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <Users className="h-8 w-8 text-orange-600" />
-                                        </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Kemasyarakatan</h4>
-                                        <p className="text-sm text-gray-600">Info untuk warga & komunitas</p>
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <FileText className="h-8 w-8 text-teal-600" />
-                                        </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Lelang & Lowongan</h4>
-                                        <p className="text-sm text-gray-600">Info tender & kesempatan</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Features */}
-                            <div className="grid md:grid-cols-3 gap-4">
-                                <div className="bg-blue-50 p-4 rounded-lg text-center">
-                                    <Bell className="h-8 w-8 text-blue-600 mx-auto mb-3" />
-                                    <h4 className="font-semibold text-gray-900 mb-2">Notifikasi Real-time</h4>
-                                    <Badge variant="secondary">Akan Hadir</Badge>
-                                    <p className="text-sm text-gray-600 mt-2">Alert langsung ke perangkat</p>
-                                </div>
-                                <div className="bg-orange-50 p-4 rounded-lg text-center">
-                                    <Tag className="h-8 w-8 text-orange-600 mx-auto mb-3" />
-                                    <h4 className="font-semibold text-gray-900 mb-2">Kategori & Filter</h4>
-                                    <Badge variant="secondary">Akan Hadir</Badge>
-                                    <p className="text-sm text-gray-600 mt-2">Cari pengumuman per kategori</p>
-                                </div>
-                                <div className="bg-green-50 p-4 rounded-lg text-center">
-                                    <FileText className="h-8 w-8 text-green-600 mx-auto mb-3" />
-                                    <h4 className="font-semibold text-gray-900 mb-2">Dokumen Terlampir</h4>
-                                    <Badge variant="secondary">Akan Hadir</Badge>
-                                    <p className="text-sm text-gray-600 mt-2">Download file & lampiran</p>
-                                </div>
-                            </div>
-
-                            {/* Recent Announcements */}
-                            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
-                                <h3 className="font-semibold text-gray-900 mb-4">Pengumuman Terkini</h3>
-                                <div className="space-y-3">
-                                    <div className="flex items-center justify-between bg-white/70 p-3 rounded-lg">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                                                <AlertCircle className="h-5 w-5 text-red-600" />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-medium text-gray-900">
-                                                    Libur Nasional & Cuti Bersama
-                                                </h4>
-                                                <p className="text-sm text-gray-600">Penyesuaian jam kerja kalurahan</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-sm font-medium text-gray-900">28 Des 2024</p>
-                                            <Badge variant="destructive" className="text-xs">
-                                                Penting
-                                            </Badge>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between bg-white/70 p-3 rounded-lg">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                                <Building className="h-5 w-5 text-blue-600" />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-medium text-gray-900">
-                                                    Pembukaan Pendaftaran Bantuan
-                                                </h4>
-                                                <p className="text-sm text-gray-600">
-                                                    Program bantuan untuk warga tidak mampu
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-sm font-medium text-gray-900">25 Des 2024</p>
-                                            <Badge variant="outline" className="text-xs">
-                                                Layanan
-                                            </Badge>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between bg-white/70 p-3 rounded-lg">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                                                <Calendar className="h-5 w-5 text-purple-600" />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-medium text-gray-900">Rapat Rutin Bulanan</h4>
-                                                <p className="text-sm text-gray-600">Undangan rapat LPMKalurahan</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-sm font-medium text-gray-900">20 Des 2024</p>
-                                            <Badge variant="secondary" className="text-xs">
-                                                Agenda
-                                            </Badge>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                                <Megaphone className="h-4 w-4" />
-                                <span>Perkiraan selesai: Q1 2025</span>
-                            </div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Sample Announcement Cards */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[1, 2, 3].map((i) => (
-                    <Card key={i} className="opacity-50">
-                        <CardHeader className="pb-3">
-                            <div className="flex items-center justify-between">
-                                <Badge variant="outline">Pemerintahan</Badge>
-                                <span className="text-xs text-gray-500">3 hari lalu</span>
-                            </div>
-                            <CardTitle className="text-lg">Pengumuman Penting {i}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                    <Calendar className="h-4 w-4" />
-                                    <span>25 Desember 2024</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                    <Clock className="h-4 w-4" />
-                                    <span>10:00 WIB</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                    <Tag className="h-4 w-4" />
-                                    <span>Kategori: Layanan Publik</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
-                                    <Users className="h-4 w-4" />
-                                    <span>1.2k kali dilihat</span>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                {/* Category Pills */}
+                <div className="flex flex-wrap gap-2 w-full md:w-auto">
+                    {[
+                        { id: "all", label: "Semua" },
+                        { id: "Pengumuman Resmi", label: "Pengumuman Resmi" },
+                        { id: "Agenda & Kegiatan", label: "Agenda Kegiatan" },
+                        { id: "Lowongan & Pamong", label: "Lowongan & Seleksi" },
+                    ].map((cat) => (
+                        <Button
+                            key={cat.id}
+                            variant={selectedCategory === cat.id ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setSelectedCategory(cat.id)}
+                            className="rounded-full text-xs h-8"
+                        >
+                            {cat.label}
+                        </Button>
+                    ))}
+                </div>
             </div>
 
-            {/* Announcement Statistics */}
-            <Card className="mt-4 opacity-50">
-                <CardHeader>
-                    <CardTitle>Statistik Pengumuman</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid md:grid-cols-4 gap-4">
-                        <div className="text-center">
-                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <FileText className="h-6 w-6 text-blue-600" />
+            {/* Content State */}
+            {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {[1, 2, 3, 4].map((i) => (
+                        <Card key={i} className="overflow-hidden">
+                            <Skeleton className="h-48 w-full" />
+                            <CardHeader className="space-y-2">
+                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-6 w-full" />
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-3/4" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            ) : error ? (
+                <div className="text-center py-12 bg-card border rounded-xl">
+                    <AlertCircle className="h-10 w-10 text-destructive mx-auto mb-3" />
+                    <h3 className="text-lg font-semibold mb-1">Terjadi Kesalahan</h3>
+                    <p className="text-muted-foreground text-sm mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()} variant="outline">
+                        Coba Lagi
+                    </Button>
+                </div>
+            ) : filteredItems.length === 0 ? (
+                <div className="text-center py-12 bg-card border rounded-xl">
+                    <Bell className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+                    <h3 className="text-lg font-semibold mb-1">Tidak Ada Pengumuman</h3>
+                    <p className="text-muted-foreground text-sm">
+                        Tidak ada pengumuman atau agenda yang cocok dengan kriteria pencarian Anda.
+                    </p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredItems.map((item) => (
+                        <Card
+                            key={item.id}
+                            className="overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow group border-border"
+                        >
+                            <div>
+                                {/* Card Media */}
+                                <div className="relative h-48 w-full bg-slate-100 overflow-hidden">
+                                    <ImageFallback
+                                        src={item.featuredImage}
+                                        _fallbackSrc="/images/banyuraden-cover.jpg"
+                                        alt={item.judul}
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                    {/* Priority Badge */}
+                                    <div className="absolute top-3 left-3 z-10 flex gap-2">
+                                        <Badge
+                                            variant={
+                                                item.prioritas === "TINGGI"
+                                                    ? "destructive"
+                                                    : item.prioritas === "PENTING"
+                                                      ? "secondary"
+                                                      : "outline"
+                                            }
+                                            className="text-xs backdrop-blur-md shadow-sm"
+                                        >
+                                            {item.prioritas === "TINGGI" ? "Penting" : item.kategori}
+                                        </Badge>
+                                    </div>
+                                </div>
+
+                                <CardHeader className="pb-2 pt-4">
+                                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+                                        <div className="flex items-center gap-1">
+                                            <Calendar className="h-3.5 w-3.5" />
+                                            <span>{formatDate(item.publishedAt)}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <User className="h-3.5 w-3.5" />
+                                            <span className="truncate max-w-[120px]">{item.penulis}</span>
+                                        </div>
+                                    </div>
+                                    <CardTitle className="text-lg font-bold leading-snug line-clamp-2 text-foreground group-hover:text-primary transition-colors">
+                                        {item.judul}
+                                    </CardTitle>
+                                </CardHeader>
+
+                                <CardContent className="pb-4">
+                                    <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed">
+                                        {item.ringkasan || item.konten.replace(/<[^>]*>/g, "")}
+                                    </p>
+                                </CardContent>
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900">156</h3>
-                            <p className="text-sm text-gray-600">Total Pengumuman</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <AlertCircle className="h-6 w-6 text-red-600" />
+
+                            {/* Card Footer Actions */}
+                            <div className="p-4 pt-0 border-t mt-auto flex items-center justify-between gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setSelectedItem(item)}
+                                    className="w-full text-xs font-medium"
+                                >
+                                    <FileText className="h-3.5 w-3.5 mr-1" />
+                                    Baca Pengumuman
+                                </Button>
+                                {item.slug && (
+                                    <Button variant="ghost" size="sm" asChild className="text-xs px-2">
+                                        <Link href={`/berita/${item.slug}`} title="Buka Halaman Lengkap">
+                                            <ExternalLink className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+                                )}
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900">12</h3>
-                            <p className="text-sm text-gray-600">Pengumuman Penting</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <CheckCircle className="h-6 w-6 text-green-600" />
+                        </Card>
+                    ))}
+                </div>
+            )}
+
+            {/* Announcement Detail Modal */}
+            {selectedItem && (
+                <Dialog open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
+                    <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                        <DialogHeader>
+                            <div className="flex items-center gap-2 mb-2">
+                                <Badge
+                                    variant={selectedItem.prioritas === "TINGGI" ? "destructive" : "secondary"}
+                                    className="text-xs"
+                                >
+                                    {selectedItem.kategori}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                    {formatDate(selectedItem.publishedAt)}
+                                </span>
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900">8.5k</h3>
-                            <p className="text-sm text-gray-600">Total Dibaca</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                                <Users className="h-6 w-6 text-purple-600" />
+                            <DialogTitle className="text-xl md:text-2xl font-bold leading-snug text-left text-foreground">
+                                {selectedItem.judul}
+                            </DialogTitle>
+                            <DialogDescription className="text-left text-xs text-muted-foreground">
+                                Diterbitkan oleh: {selectedItem.penulis}
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        {/* Modal Image */}
+                        {selectedItem.featuredImage && (
+                            <div className="relative h-60 w-full rounded-lg overflow-hidden my-3 bg-slate-100">
+                                <ImageFallback
+                                    src={selectedItem.featuredImage}
+                                    _fallbackSrc="/images/banyuraden-cover.jpg"
+                                    alt={selectedItem.judul}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 600px"
+                                    className="object-cover"
+                                />
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900">2.1k</h3>
-                            <p className="text-sm text-gray-600">Pembaca Aktif</p>
+                        )}
+
+                        {/* Modal Content */}
+                        <div className="article-content prose prose-sm md:prose-base max-w-none text-foreground my-2">
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: sanitizeHtml(selectedItem.konten),
+                                }}
+                            />
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+
+                        {/* Modal Actions */}
+                        <div className="flex justify-between items-center pt-4 border-t mt-4">
+                            {selectedItem.slug ? (
+                                <Button variant="outline" size="sm" asChild>
+                                    <Link href={`/berita/${selectedItem.slug}`}>
+                                        <ExternalLink className="h-4 w-4 mr-2" />
+                                        Buka di Halaman Berita
+                                    </Link>
+                                </Button>
+                            ) : (
+                                <div />
+                            )}
+                            <Button size="sm" onClick={() => setSelectedItem(null)}>
+                                Tutup
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     );
 }

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { createApiRouteHandler } from "@/lib/api-helpers";
 
 // Primary and fallback OpenSID endpoints
-const OPENSID_PRIMARY = process.env.OPENSID_API_PRIMARY || "https://banyuraden.id";
+const OPENSID_PRIMARY = process.env.OPENSID_API_PRIMARY || "https://banyuraden.sleman-desa.id";
 const OPENSID_FALLBACK = process.env.OPENSID_API_FALLBACK || process.env.OPENSID_API_URL || "https://banyuraden.sleman-desa.id";
 
 // Type definitions for OpenSID article structure

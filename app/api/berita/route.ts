@@ -2,7 +2,8 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import type { ApiResponse } from "@/lib/api-response";
-import { createSuccessResponse, createErrorResponse, createValidationErrorResponse } from "@/lib/api-response";
+import { createSuccessResponse, createErrorResponse, createValidationErrorResponse, createUnauthorizedResponse } from "@/lib/api-response";
+import { auth } from "@/auth";
 import { createApiRouteHandler } from "@/lib/api-helpers";
 
 // Mock data for berita (will be replaced with database queries)
@@ -90,6 +91,11 @@ export const { GET } = createApiRouteHandler(async (request: NextRequest) => {
 
 export async function POST(request: NextRequest): Promise<NextResponse<ApiResponse>> {
     try {
+        const session = await auth();
+        if (!session || (session.user as any)?.role !== "ADMIN") {
+            return NextResponse.json(createUnauthorizedResponse("Akses ditolak: autentikasi admin diperlukan"), { status: 401 });
+        }
+
         const body = await request.json();
 
         // Basic validation

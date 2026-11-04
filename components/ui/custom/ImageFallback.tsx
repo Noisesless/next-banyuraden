@@ -1,7 +1,8 @@
 import type { ImageProps } from "next/image";
 import Image from "next/image";
-import { useState } from "react";
-import { ImageOff } from "lucide-react";
+import { useState, useEffect } from "react";
+
+const DEFAULT_COVER = "/images/banyuraden-cover.jpg";
 
 interface ImageFallbackProps extends Omit<ImageProps, "src"> {
     src?: string | null;
@@ -11,43 +12,46 @@ interface ImageFallbackProps extends Omit<ImageProps, "src"> {
 
 export default function ImageFallback({
     src,
-    _fallbackSrc,
-    iconSize = 48,
+    _fallbackSrc = DEFAULT_COVER,
     alt = "",
     className = "",
     ...props
 }: ImageFallbackProps) {
     // Validate and normalize the source URL
-    const normalizeSrc = (url: string | null | undefined) => {
-        if (!url || typeof url !== "string") return null;
-        // If it's a relative path, return null to show fallback
-        if (url.startsWith("/") && !url.startsWith("//")) return null;
-        // If it doesn't start with http, return null
-        if (!url.startsWith("http://") && !url.startsWith("https://")) return null;
-        return url;
+    const normalizeSrc = (url: string | null | undefined): string => {
+        if (!url || typeof url !== "string" || url.trim() === "") {
+            return _fallbackSrc;
+        }
+        // Allow relative local paths
+        if (url.startsWith("/") && !url.startsWith("//")) {
+            return url;
+        }
+        // Allow valid HTTP/HTTPS URLs
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            return url;
+        }
+        return _fallbackSrc;
     };
 
-    const [imgSrc, setImgSrc] = useState(normalizeSrc(src));
-    const [hasError, setHasError] = useState(!normalizeSrc(src));
+    const [imgSrc, setImgSrc] = useState<string>(normalizeSrc(src));
+
+    useEffect(() => {
+        setImgSrc(normalizeSrc(src));
+    }, [src, _fallbackSrc]);
 
     const handleError = () => {
-        if (!hasError) {
-            setHasError(true);
-            setImgSrc(null);
+        if (imgSrc !== _fallbackSrc) {
+            setImgSrc(_fallbackSrc);
         }
     };
 
-    // If no image or error occurred, show fallback
-    if (hasError || !imgSrc) {
-        return (
-            <div
-                className={`flex items-center justify-center bg-[#1f2b44] text-green-100 ${className}`}
-                style={props.style}
-            >
-                <ImageOff size={iconSize} />
-            </div>
-        );
-    }
-
-    return <Image src={imgSrc} alt={alt} className={className} onError={handleError} {...props} />;
+    return (
+        <Image
+            src={imgSrc}
+            alt={alt}
+            className={className}
+            onError={handleError}
+            {...props}
+        />
+    );
 }

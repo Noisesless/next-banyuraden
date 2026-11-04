@@ -26,8 +26,20 @@ const CACHE_DURATION = 300000; // 5 minutes cache for historical data
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ channelId: string }> }) {
     const { channelId } = await params;
+
+    // Validate channelId (must be numeric digits only)
+    if (!/^\d+$/.test(channelId)) {
+        return NextResponse.json({ error: "Invalid channel ID format: must be numeric" }, { status: 400 });
+    }
+
     const searchParams = request.nextUrl.searchParams;
-    const results = searchParams.get("results") || "8000"; // Default to 8000
+    let results = searchParams.get("results") || "8000";
+    if (!/^\d+$/.test(results)) {
+        results = "8000";
+    }
+    // Clamp results to max 8000 to prevent excessive memory usage
+    const numericResults = Math.min(Math.max(1, parseInt(results, 10)), 8000);
+    results = numericResults.toString();
 
     try {
         // Check cache first
@@ -106,6 +118,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             totalRecords: historicalData.length,
         };
 
+        // Limit cache size to max 50 entries
+        if (historicalCache.size >= 50) {
+            const firstKey = historicalCache.keys().next().value;
+            if (firstKey) historicalCache.delete(firstKey);
+        }
         // Cache the result
         historicalCache.set(`${channelId}-${results}`, {
             data: response,

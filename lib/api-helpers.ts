@@ -58,6 +58,7 @@ export async function fetchOpenSIDStatistik(endpoint: string, config?: { cacheTa
  * Unwrap OpenSID API response - extracts data array from response
  * Returns empty array on failure
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function unwrapOpenSIDResponse(response: { success: boolean; data?: unknown }): any[] {
     if (!response.success || !response.data) return [];
     // Handle JSON:API format { data: [...], meta: {...}, links: {...} }

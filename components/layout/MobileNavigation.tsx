@@ -565,17 +565,7 @@ export function MobileNavigation() {
                                         {isActive("/ttg") && <div className="ml-auto w-2 h-2 bg-current rounded-full" />}
                                     </Link>
 
-                                    <a
-                                        key="https://web-komunitas.vercel.app/"
-                                        href="https://web-komunitas.vercel.app/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={() => setIsSidebarOpen(false)}
-                                        className="flex items-center gap-3 px-3 py-3 text-sm rounded-md transition-all duration-200 mb-1 cursor-pointer hover:bg-accent hover:text-accent-foreground"
-                                    >
-                                        <Users className="h-5 w-5 shrink-0 text-primary" />
-                                        <span className="truncate">Komunitas</span>
-                                    </a>
+                                    
 
 
 

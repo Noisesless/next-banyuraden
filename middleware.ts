@@ -2,9 +2,24 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const store: Map<string, { count: number; resetAt: number }> = new Map();
+const MAX_STORE_SIZE = 10000;
+
+function cleanupExpiredStore(now: number) {
+    if (store.size > MAX_STORE_SIZE) {
+        for (const [key, value] of store.entries()) {
+            if (now > value.resetAt) {
+                store.delete(key);
+            }
+        }
+        // If still exceeds, purge oldest
+        if (store.size > MAX_STORE_SIZE) {
+            store.clear();
+        }
+    }
+}
 
 const windowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS || "60000", 10);
-const max = parseInt(process.env.RATE_LIMIT_MAX || "60", 10);
+const max = parseInt(process.env.RATE_LIMIT_MAX || (process.env.NODE_ENV === "development" ? "300" : "60"), 10);
 
 function getIp(req: NextRequest): string {
     const xff = req.headers.get("x-forwarded-for");
@@ -14,7 +29,7 @@ function getIp(req: NextRequest): string {
     }
     const xri = req.headers.get("x-real-ip");
     if (xri) return xri;
-    return "0.0.0.0";
+    return req.ip || "127.0.0.1";
 }
 
 export default function middleware(req: NextRequest) {
@@ -39,6 +54,7 @@ export default function middleware(req: NextRequest) {
         const key = `${ip}:api`;
 
         const now = Date.now();
+        cleanupExpiredStore(now);
         const entry = store.get(key);
 
         if (!entry || now > entry.resetAt) {

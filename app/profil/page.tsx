@@ -38,7 +38,7 @@ export default function ProfilPage() {
         hariCurahHujan: "120 hari",
 
         batasWilayah: {
-            utara: "Kalurahan Sendangadi & Kapanewon Mlati",
+            utara: "Kalurahan Nogotirto dan Trihanggo",
             timur: "Kota Yogyakarta",
             selatan: "Kapanewon Kasihan (Bantul)",
             barat: "Kalurahan Ambarketawang",

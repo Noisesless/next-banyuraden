@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 type TtgTutorialDetail = {
     id: string;
@@ -123,7 +124,7 @@ function TtgDetailContent() {
                             <div className="prose prose-gray max-w-none">
                                 <div
                                     dangerouslySetInnerHTML={{
-                                        __html: data.excerptHtml,
+                                        __html: sanitizeHtml(data.excerptHtml),
                                     }}
                                 />
                             </div>
@@ -149,7 +150,7 @@ function TtgDetailContent() {
                             <div className="prose prose-gray max-w-none">
                                 <div
                                     dangerouslySetInnerHTML={{
-                                        __html: data.contentHtml,
+                                        __html: sanitizeHtml(data.contentHtml),
                                     }}
                                 />
                             </div>

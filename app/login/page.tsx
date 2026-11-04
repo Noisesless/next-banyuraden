@@ -21,14 +21,16 @@ const errorMessage = (code?: string) => {
 export default async function LoginPage({
     searchParams,
 }: {
-    searchParams?: LoginSearchParams;
+    searchParams?: Promise<LoginSearchParams>;
 }) {
+    const resolvedParams = searchParams ? await searchParams : undefined;
     async function loginAction(formData: FormData) {
         "use server";
 
         const email = String(formData.get("email") || "");
         const password = String(formData.get("password") || "");
-        const callbackUrl = String(formData.get("callbackUrl") || "/");
+        const rawCallback = String(formData.get("callbackUrl") || "/");
+        const callbackUrl = rawCallback.startsWith("/") && !rawCallback.startsWith("//") ? rawCallback : "/";
 
         if (!email || !password) {
             redirect("/login?error=CredentialsSignin");
@@ -44,7 +46,7 @@ export default async function LoginPage({
         }
     }
 
-    const message = errorMessage(searchParams?.error);
+    const message = errorMessage(resolvedParams?.error);
 
     return (
         <div className="container mx-auto px-4 py-10">
@@ -57,7 +59,7 @@ export default async function LoginPage({
                     </CardHeader>
                     <CardContent>
                         <form action={loginAction} className="space-y-4">
-                            <input type="hidden" name="callbackUrl" value={searchParams?.callbackUrl || "/"} />
+                            <input type="hidden" name="callbackUrl" value={(resolvedParams?.callbackUrl?.startsWith("/") && !resolvedParams?.callbackUrl?.startsWith("//")) ? resolvedParams.callbackUrl : "/"} />
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email</Label>
                                 <Input

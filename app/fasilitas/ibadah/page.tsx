@@ -21,22 +21,22 @@ interface FasilitasItem {
     };
 }
 
-function getJenisBadge(jenis: string) {
+function getJenisBadge(jenis?: string) {
     const styles: Record<string, string> = {
         MASJID: "bg-emerald-100 text-emerald-800 border-emerald-200",
         MUSHOLA: "bg-teal-100 text-teal-800 border-teal-200",
         GEREJA: "bg-blue-100 text-blue-800 border-blue-200",
     };
-    return styles[jenis] || "bg-gray-100 text-gray-800 border-gray-200";
+    return (jenis ? styles[jenis] : undefined) || "bg-gray-100 text-gray-800 border-gray-200";
 }
 
-function getJenisLabel(jenis: string): string {
+function getJenisLabel(jenis?: string): string {
     const labels: Record<string, string> = {
         MASJID: "Masjid",
         MUSHOLA: "Mushola",
         GEREJA: "Gereja",
     };
-    return labels[jenis] || jenis;
+    return (jenis ? labels[jenis] : undefined) || jenis || "";
 }
 
 async function fetchIbadahFasilitas(): Promise<FasilitasItem[]> {

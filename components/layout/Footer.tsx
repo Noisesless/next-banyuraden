@@ -39,24 +39,24 @@ export function Footer() {
 
     const socialLinks = [
         {
-            href: "https://www.facebook.com/kalurahanbanyuraden.sid",
+            href: "https://www.facebook.com/kalurahan.banyuraden.3",
             icon: siFacebook,
             label: "Facebook",
             color: "#0866FF",
         },
         {
-            href: "https://api.whatsapp.com/send?phone=6287742203602",
+            href: "https://api.whatsapp.com/send?phone=6289612624627",
             icon: siWhatsapp,
             label: "WhatsApp",
             color: "#2bb517",
         },
         {
-            href: "https://www.instagram.com/kalurahanbanyuraden.sid",
+            href: "https://www.instagram.com/kalurahan.banyuraden",
             icon: siInstagram,
             label: "Instagram",
             color: "#FF0069",
         },
-        { href: "https://www.youtube.com/@TIMMEDIAPONDOKREJO", icon: siYoutube, label: "YouTube", color: "#FF0000" },
+        { href: "https://www.youtube.com/@KalurahanBanyuraden", icon: siYoutube, label: "YouTube", color: "#FF0000" },
     ];
 
     return (
@@ -163,7 +163,7 @@ export function Footer() {
                             <div className="flex items-center space-x-3">
                                 <Phone className="h-5 w-5 text-[#3eafdf] shrink-0" />
                                 <a
-                                    href={`tel:${t("footer.telepon").replace(/[^\d+]/g, "")}`}
+                                    href="tel:0274621626"
                                     className="text-sm text-[#ddf0ff] hover:text-[#3eafdf] transition-colors"
                                 >
                                     {t("footer.telepon")}

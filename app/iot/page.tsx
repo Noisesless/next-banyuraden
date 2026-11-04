@@ -167,7 +167,7 @@ export default function IoTPage() {
     const [selectedSensor, setSelectedSensor] = React.useState<IoTSensor | null>(null);
     const [geoJsonData, setGeoJsonData] = React.useState<GeoJSON.FeatureCollection | null>(null);
     const [mapLoaded, setMapLoaded] = React.useState(false);
-    const [mapCenter, setMapCenter] = React.useState<[number, number]>([-7.659, 110.31]);
+    const [mapCenter, setMapCenter] = React.useState<[number, number]>([-7.787341, 110.336198]);
     const [newEntryIds, setNewEntryIds] = React.useState<Set<number>>(new Set());
     const [mapKey, setMapKey] = React.useState(0);
 
@@ -716,8 +716,23 @@ export default function IoTPage() {
                     </div>
                 )}
 
+                {/* Banyuraden IoT Status Banner when no devices */}
+                {!loading && !error && devices.length === 0 && (
+                    <div className="bg-sky-50 border border-sky-200 rounded-xl p-5 text-sky-900 shadow-sm flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-sky-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                            <Activity className="h-5 w-5" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-base mb-1">Status Perangkat IoT Kalurahan Banyuraden</h3>
+                            <p className="text-sm text-sky-800 leading-relaxed">
+                                Stasiun sensor IoT telemetri lingkungan dan kebencanaan untuk Kalurahan Banyuraden sedang disiapkan. Data pemantauan real-time akan langsung terhubung ke dashboard ini setelah instalasi sensor aktif. Peta interaktif di bawah menampilkan batas wilayah resmi Kalurahan Banyuraden dengan MapLibre GL.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 {/* Summary Cards */}
-                {!loading && !error && (
+                {!loading && !error && devices.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <Card className="bg-linear-to-br from-green-50 to-emerald-50 border-green-200">
                             <CardContent className="p-4">
@@ -780,7 +795,7 @@ export default function IoTPage() {
                 {/* Main Content */}
                 <div className="grid lg:grid-cols-3 gap-6">
                     {/* Map Section */}
-                    <div className="lg:col-span-2">
+                    <div className={devices.length > 0 ? "lg:col-span-2" : "lg:col-span-3"}>
                         <Card className="h-[600px] lg:h-[700px] overflow-hidden pb-0">
                             <CardHeader>
                                 <div className="flex items-center justify-between">
@@ -884,8 +899,8 @@ export default function IoTPage() {
                         </Card>
                     </div>
 
-                    {/* Sensor List */}
-                    <div className="space-y-4">
+                    {devices.length > 0 && (
+                        <div className="space-y-4">
                         <Card className="h-[600px] lg:h-[700px]">
                             <CardHeader>
                                 <CardTitle className="text-lg">
@@ -1012,6 +1027,7 @@ export default function IoTPage() {
                             </CardContent>
                         </Card>
                     </div>
+                    )}
                 </div>
 
                 {/* Sensor Detail Modal */}

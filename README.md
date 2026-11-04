@@ -1,111 +1,171 @@
 <p align="center">
-  <img src="public/images/logo.png" width="120" alt="Logo Kalurahan Pondokrejo" />
+  <img src="public/images/logo.png" width="120" alt="Logo Resmi Kalurahan Banyuraden" />
 </p>
 
-# Portal Pondokrejo
+# Portal Resmi Kalurahan Banyuraden
 
-Portal Pondokrejo adalah aplikasi web yang berfungsi sebagai pengumpul API (API aggregator) untuk menyajikan informasi publik dari berbagai sistem milik Kalurahan Pondokrejo. Portal ini tidak menjadi sumber data utama dan tidak menyimpan data konten ke database internal; konten ditampilkan dari layanan upstream yang relevan.
-
-## Tujuan
-- Menyediakan satu pintu akses informasi publik yang konsisten, cepat, dan mudah diakses.
-- Mengurangi duplikasi implementasi antarmuka dengan memusatkan konsumsi API dari sistem yang sudah ada.
-- Menjadi lapisan presentasi (presentation layer) dan integrasi (integration layer) bagi layanan yang berbeda.
-
-## Sumber Data
-Portal mengambil data dari beberapa layanan, antara lain:
-- OpenSID (arsip/berita, wilayah, PPID, keuangan, dan endpoint internal lain yang relevan)
-- SDGs
-- IDM
-- Sistem/layanan internal lain yang dipublikasikan melalui API
-
-## Cara Kerja (Ringkas)
-- Aplikasi client dan server memanggil route internal `app/api/*` sebagai antarmuka terpadu.
-- Untuk beberapa sumber eksternal, portal menyediakan proxy untuk menghindari masalah CORS dan menambahkan caching.
-- Konten ditampilkan secara on-demand dari sumber upstream, dengan mekanisme cache/revalidate sesuai kebutuhan.
-
-## Prasyarat
-- Node.js dan npm
-- Environment variables (lihat `.env.example`)
-
-## Menjalankan Lokal
-```bash
-npm install
-npm run dev
-```
-
-Buka: http://localhost:5091
-
-## Build dan Menjalankan Production
-```bash
-npm run build
-npm run start
-```
-
-## Konfigurasi Environment (Umum)
-- `OPENSID_API_URL`: base URL OpenSID (jika diperlukan)
-- `NEXT_PUBLIC_SITE_URL`: base URL portal (untuk produksi)
-- `CORS_ORIGIN`: origin yang diizinkan mengakses API portal
-- `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`: konfigurasi rate limiting route `/api`
-
-## Keterangan Data Pribadi
-Portal Pondokrejo tidak melakukan pengumpulan, perekaman, maupun penyimpanan data pribadi pengguna secara mandiri. Portal ini berfungsi sebagai media penyajian informasi yang bersumber dari sistem/layanan upstream milik Kalurahan Pondokrejo. Dengan demikian, kewajiban pengelolaan dan pemenuhan ketentuan perlindungan data pribadi melekat pada sistem sumber sesuai kewenangan dan kebijakan masing-masing. Portal Pondokrejo tetap menerapkan pengamanan teknis yang wajar untuk menjaga integritas layanan.
-
-## Keamanan dan Operasional
-- Security headers dan Content Security Policy (CSP) dikonfigurasi global di `next.config.ts`.
-- CORS distandarkan untuk route API utama melalui helper internal dan dibatasi oleh konfigurasi environment.
-- Rate limiting diterapkan pada route `/api` melalui `middleware.ts`.
-- Ringkasan audit fix terbaru tersedia di [AUDIT_FIX_LATEST.md](./AUDIT_FIX_LATEST.md).
+**Sistem Informasi & Portal Layanan Digital Terpadu Kalurahan Banyuraden**  
+*Kapanewon Gamping, Kabupaten Sleman, Daerah Istimewa Yogyakarta*  
+🌐 **Live URL Produksi:** [https://banyuraden.smartdesa.net](https://banyuraden.smartdesa.net)
 
 ---
 
-## 🔐 Pembaruan Keamanan — Pentest VULN-01 s/d VULN-08
+## 📌 Ringkasan Sistem
 
-> **Tanggal perbaikan:** 11 Juni 2026 · Commit `aaa2700`
+Portal Resmi Kalurahan Banyuraden adalah platform web modern berbasis **Next.js 15 (App Router)** yang berfungsi sebagai pusat layanan digital dan **API Aggregator** terpadu. Sistem ini mengintegrasikan berbagai sumber data upstream resmi pemerintah kalurahan, kabupaten, dan sistem geospasial guna menyajikan informasi publik yang transparan, akurat, dan berkecepatan tinggi.
 
-Berikut ringkasan perbaikan hasil penetration testing (pentest) yang telah diterapkan:
+### Keunggulan Arsitektur
+- **High-Performance Hybrid Rendering:** Kombinasi Server-Side Rendering (SSR), Incremental Static Regeneration (ISR), dan Static Site Generation (SSG) untuk meminimalkan waktu muat halaman (<1 detik).
+- **Multi-Source Upstream Resilience:** Didukung mekanisme failover otomatis antara REST API resmi Kabupaten Sleman, OpenSID Kalurahan, dan cached static data.
+- **Laptop-First & Mobile Responsive:** Tampilan responsif optimal pada resolusi laptop (1366×768) hingga smartphone Android (360px – 412px).
+- **Keamanan Tingkat Produksi:** Proteksi menyeluruh dari serangan XSS, Clickjacking, MIME-sniffing, dan abusive request.
 
-### VULN-01 — Redirect ke Pengaduan Eksternal (Unvalidated Redirect)
-Seluruh tautan `/pengaduan` internal dialihkan ke sistem pengaduan resmi OpenSID:
-`https://pondokrejo.sleman-desa.id/index.php/pengaduan`
-Halaman internal `/pengaduan` beserta komponen `PengaduanDisplay` dihapus untuk menghilangkan permukaan serangan formulir yang tidak divalidasi.
+---
 
-### VULN-02 — Halaman & API Pengaduan Internal Dihapus
-Route `app/api/pengaduan/route.ts` dan halaman `app/pengaduan/page.tsx` dihapus sepenuhnya (~170+ baris). Fungsionalitas pengaduan diserahkan ke sistem upstream (OpenSID).
+## 🌐 Integrasi Sumber Data Upstream
 
-### VULN-03 — Metadata URL Hardcoded (Information Disclosure)
-URL produksi di `app/layout.tsx` diperbarui dari domain lama (`pondokrejo.clasnet.co.id`) ke domain resmi (`devoneclickpondokrejo.slemankab.go.id`) untuk menghindari kebocoran informasi infrastruktur internal.
+Portal ini secara aktif menyinkronkan data dari saluran resmi berikut:
 
-### VULN-04 — Rate Limiting Header Tidak Transparan
-Middleware rate limiting diperbarui untuk menyertakan header standar RFC:
-- `X-RateLimit-Limit` — batas maksimum request per window
-- `X-RateLimit-Remaining` — sisa request yang diizinkan
-- `X-RateLimit-Reset` — waktu reset dalam Unix timestamp
+1. **WordPress REST API Kabupaten Sleman** (`banyuradensid.slemankab.go.id`):
+   - Publikasi berita dan kegiatan kalurahan terkini.
+   - Feed **Pengumuman Resmi & Agenda Pamong** (Kategori ID 3).
+2. **OpenSID Kalurahan Banyuraden** (`banyuraden.sleman-desa.id` / `banyuraden.id`):
+   - Layanan administrasi kependudukan dan surat-menyurat online.
+   - Portal pengaduan warga resmi.
+   - Data APBKal, transparansi anggaran, dan realisasi keuangan desa.
+3. **Peta Interaktif Geospasial (GeoJSON & MapLibre GL):**
+   - Batas administratif Kalurahan Banyuraden dan 8 Padukuhan: *Banyumeneng, Cokrowijayan, Dowangan, Guyangan, Kaliabu, Kanoman, Modinan, Sukunan*.
+   - Pemetaan titik fasilitas kesehatan, pendidikan, ibadah, dan kantor pamong.
+4. **Sensor IoT Lingkungan & Cuaca (ThingSpeak API):**
+   - Pemantauan metrik kualitas lingkungan dan stasiun cuaca lokal secara real-time.
 
-Header ini disertakan baik pada respons normal maupun respons `429 Too Many Requests`.
+---
 
-### VULN-05 — Navigasi Header Tidak Membedakan Link Eksternal
-Link **Pengaduan** di `Header.tsx` dan `MobileNavigation.tsx` tidak ditandai sebagai eksternal, sehingga membuka tautan di tab yang sama tanpa `noopener noreferrer`. Kini semua link eksternal menggunakan:
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 15.x (React 19, TypeScript)
+- **Styling & UI:** Tailwind CSS, Radix UI, Lucide Icons, Phosphor Icons
+- **Database & ORM:** MySQL / MariaDB via Prisma ORM
+- **Pemetaan:** MapLibre GL / OpenStreetMap (CDN compliant)
+- **Sanitasi Konten:** DOMPurify (`isomorphic-dompurify`)
+- **Proses Manajer VPS:** PM2 Cluster Mode (Node.js runtime)
+
+---
+
+## 🚀 Panduan Memulai (Local Development)
+
+### 1. Prasyarat
+- Node.js versi 20.x atau lebih baru
+- npm versi 10.x atau lebih baru
+- Akses database MySQL (opsional untuk mode baca API statis)
+
+### 2. Instalasi Dependensi
+```bash
+git clone https://github.com/Noisesless/next-banyuraden.git
+cd next-banyuraden
+npm install
+```
+
+### 3. Konfigurasi Lingkungan (.env)
+Salin berkas `.env.example` menjadi `.env.local`:
+```bash
+cp .env.example .env.local
+```
+Sesuaikan parameter koneksi database dan domain upstream sesuai kebutuhan lokal.
+
+### 4. Menjalankan Server Development
+```bash
+npm run dev
+```
+Buka browser pada alamat: **`http://localhost:5091`** (port dev default).
+
+---
+
+## 📦 Build & Deployment Produksi
+
+### 1. Kompilasi Produksi
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Build Next.js bundle
+npm run build
+```
+
+### 2. Menjalankan via PM2 (Server Produksi)
+```bash
+pm2 start npm --name "next-banyuraden" -- start -- -p 5091
+pm2 save
+```
+
+---
+
+## 🔒 Standar Keamanan Produksi (Production Hardening)
+
+Portal ini telah melalui serangkaian audit keamanan (SAST & DAST) dengan implementasi proteksi aktif:
+
+### 1. Content Security Policy (CSP) & Security Headers
+Dikonfigurasi secara terpusat pada `next.config.ts`:
+- **`Content-Security-Policy`**: Membatasi eksekusi skrip hanya dari sumber internal terpercaya (`'self'`), melarang embedding iframe tidak sah (`frame-ancestors 'none'`), serta mengizinkan aset gambar upstream terverifikasi.
+- **`X-Frame-Options: DENY`**: Mencegah serangan Clickjacking.
+- **`X-Content-Type-Options: nosniff`**: Menangkal MIME-type sniffing exploit.
+- **`Strict-Transport-Security (HSTS)`**: Memaksa enkripsi HTTPS (`max-age=31536000; includeSubDomains; preload`).
+- **`Referrer-Policy: strict-origin-when-cross-origin`**: Menjaga kerahasiaan URL internal dari rujukan luar.
+
+### 2. Perlindungan XSS (Cross-Site Scripting)
+Seluruh konten HTML yang ditarik dari WordPress Gutenberg dan OpenSID wajib melalui proses sanitasi ketat (`lib/sanitize.ts`) menggunakan whitelist tag aman (`p`, `h1`-`h6`, `figure`, `figcaption`, `img`, `table`, dll). Semua tag skrip berbahaya, iframe, dan inline event handler (`onload`, `onerror`) dibuang sebelum dirender ke DOM.
+
+### 3. Rate Limiting Transparan Berstandar RFC
+Diterapkan pada seluruh rute `/api/*` melalui `middleware.ts` untuk memitigasi serangan DDoS dan Brute Force:
+- Header transparan yang disertakan: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, dan `X-RateLimit-Reset`.
+- Mengembalikan HTTP status `429 Too Many Requests` saat batas kuota request per menit terlampaui.
+
+### 4. Isolasi Kredensial & Sanitasi Git
+- Seluruh rahasia server (database password, API key, auth secret) diisolasi dalam file `.env` yang berada di dalam `.gitignore`.
+- Menggunakan script sanitasi pra-commit untuk memastikan tidak ada token atau file kredensial yang terunggah ke repositori publik.
+
+### 5. Atribut Tautan Eksternal Aman
+Semua tautan yang mengarah ke luar portal (OpenSID, media sosial, Google Maps) wajib menggunakan atribut:
 ```html
 target="_blank" rel="noopener noreferrer"
 ```
-
-### VULN-06 — API Peta Tanpa Validasi Input
-`app/api/peta/route.ts` diperbarui dengan validasi dan sanitasi parameter query agar tidak meneruskan input mentah ke upstream.
-
-### VULN-07 — API SDGs Detail Tanpa Pembatasan Akses
-`app/api/sdgs/detail/[goal]/route.ts` diperbarui dengan penanganan error yang lebih ketat dan pembatasan response untuk mencegah eksposur data yang tidak diperlukan.
-
-### VULN-08 — Link Pengaduan di Footer Tanpa Atribut External
-`components/layout/Footer.tsx` diperbarui: semua link ke sistem pengaduan eksternal kini menggunakan flag `external: true` sehingga dirender dengan atribut keamanan yang benar (`target="_blank" rel="noopener noreferrer"`).
+guna mencegah kerentanan *Tabnabbing* / `window.opener` hijacking.
 
 ---
 
-> Untuk detail teknis lengkap, lihat [AUDIT_FIX_LATEST.md](./AUDIT_FIX_LATEST.md) dan [RELEASE_NOTES.md](./RELEASE_NOTES.md).
+## 📂 Struktur Direktori Utama
 
-## Dokumen
-- [RELEASE_NOTES.md](./RELEASE_NOTES.md)
-- [AUDIT_FIX_LATEST.md](./AUDIT_FIX_LATEST.md)
+```
+next-banyuraden/
+├── app/                      # Next.js 15 App Router (Pages & API Routes)
+│   ├── api/                  # Endpoint API (external-news, pengumuman, iot, dll)
+│   ├── berita/               # Halaman arsip & detail berita ([slug])
+│   ├── pengumuman/           # Halaman pengumuman resmi & agenda
+│   ├── profil/               # Profil kalurahan & pamong
+│   ├── layout.tsx            # Root layout & meta tags resmi
+│   └── page.tsx              # Beranda utama
+├── components/               # Komponen UI modular
+│   ├── layout/               # Header, Footer, MobileNav
+│   └── ui/                   # Komponen Radix, Button, Card, ImageFallback
+├── lib/                      # Helper, services, sanitasi XSS, upstream API client
+├── prisma/                   # Schema database & seeder
+├── public/                   # Asset statis (logo, GeoJSON, cover default)
+├── styles/                   # Global CSS & Gutenberg gallery grid styling
+└── .docs/                    # Dokumentasi arsitektur, database, API, & audit keamanan
+```
 
-<p align="center">
-  <img src="public/images/clasnet-group.svg" width="140" alt="Clasnet Group" />
-</p>
+---
+
+## 📞 Kontak & Sekretariat Resmi
+
+**Pemerintah Kalurahan Banyuraden**  
+- **Alamat Kantor:** Jl. Ringroad Barat, Banyuraden, Kapanewon Gamping, Kabupaten Sleman, D.I. Yogyakarta 55293  
+- **Telepon / Fax:** (0274) 621626  
+- **WhatsApp Pelayanan:** 0896-1262-4627  
+- **Email Resmi:** [desa.banyuraden@gmail.com](mailto:desa.banyuraden@gmail.com)  
+- **Instagram:** [@kalurahan.banyuraden](https://www.instagram.com/kalurahan.banyuraden)  
+- **YouTube:** [Kalurahan Banyuraden](https://www.youtube.com/@KalurahanBanyuraden)  
+- **Facebook:** [Kalurahan Banyuraden](https://www.facebook.com/kalurahan.banyuraden.3)  
+
+---
+*Dikembangkan dengan dedikasi untuk transparansi dan kemajuan pelayanan warga Kalurahan Banyuraden.*

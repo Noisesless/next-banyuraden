@@ -223,8 +223,27 @@ function getServerSideData() {
     };
 }
 
-export default function Home() {
+export default async function Home() {
     const serverData = getServerSideData();
+
+    try {
+        const { getSlemankabAgenda } = await import("@/lib/slemankab-news");
+        const agendaResult = await getSlemankabAgenda({ perPage: 5 });
+        if (agendaResult.posts && agendaResult.posts.length > 0) {
+            serverData.pengumuman = agendaResult.posts.map((p) => {
+                const titleLower = p.title.toLowerCase();
+                const isPenting = titleLower.includes("resmi") || titleLower.includes("darurat");
+                return {
+                    id: p.id,
+                    judul: p.title,
+                    prioritas: isPenting ? "tinggi" : "penting",
+                    konten: p.excerpt ? p.excerpt.substring(0, 140) + "..." : p.title,
+                };
+            });
+        }
+    } catch (e) {
+        console.warn("Home: Using fallback pengumuman:", e);
+    }
 
     return (
         <Suspense

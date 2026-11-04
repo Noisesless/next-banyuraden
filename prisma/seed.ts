@@ -19,15 +19,15 @@ async function main() {
     // Create Admin User
     const hashedPassword = await bcrypt.hash("admin123", 10);
     await prisma.pengguna.upsert({
-        where: { email: "admin@pondokrejo.desa.id" },
+        where: { email: "admin@banyuraden.desa.id" },
         update: {},
         create: {
-            email: "admin@pondokrejo.desa.id",
-            namaLengkap: "Administrator Kalurahan Pondokrejo",
+            email: "admin@banyuraden.desa.id",
+            namaLengkap: "Administrator Kalurahan Banyuraden",
             kataSandi: hashedPassword,
             nik: "3401011234567890",
             telepon: "0274-123456",
-            alamat: "Kantor Kalurahan Pondokrejo, Sleman, DIY",
+            alamat: "Kantor Kalurahan Banyuraden, Sleman, DIY",
             peran: "ADMIN",
             aktif: true,
         },
@@ -36,29 +36,29 @@ async function main() {
     // Create Staff Users
     await Promise.all([
         prisma.pengguna.upsert({
-            where: { email: "sekretariat@pondokrejo.desa.id" },
+            where: { email: "sekretariat@banyuraden.desa.id" },
             update: {},
             create: {
-                email: "sekretariat@pondokrejo.desa.id",
+                email: "sekretariat@banyuraden.desa.id",
                 namaLengkap: "Sekretaris Kalurahan",
                 kataSandi: hashedPassword,
                 nik: "3401011234567891",
                 telepon: "0274-123457",
-                alamat: "Kantor Kalurahan Pondokrejo, Sleman, DIY",
+                alamat: "Kantor Kalurahan Banyuraden, Sleman, DIY",
                 peran: "STAFF",
                 aktif: true,
             },
         }),
         prisma.pengguna.upsert({
-            where: { email: "bendahara@pondokrejo.desa.id" },
+            where: { email: "bendahara@banyuraden.desa.id" },
             update: {},
             create: {
-                email: "bendahara@pondokrejo.desa.id",
+                email: "bendahara@banyuraden.desa.id",
                 namaLengkap: "Bendahara Kalurahan",
                 kataSandi: hashedPassword,
                 nik: "3401011234567892",
                 telepon: "0274-123458",
-                alamat: "Kantor Kalurahan Pondokrejo, Sleman, DIY",
+                alamat: "Kantor Kalurahan Banyuraden, Sleman, DIY",
                 peran: "STAFF",
                 aktif: true,
             },
@@ -71,37 +71,37 @@ async function main() {
 
     const beritaData = [
         {
-            judul: "Pelantikan Perangkat Kalurahan Pondokrejo Periode 2025-2030",
-            slug: "pelantikan-perangkat-kalurahan-pondokrejo-periode-2025-2030",
+            judul: "Pelantikan Perangkat Kalurahan Banyuraden Periode 2025-2030",
+            slug: "pelantikan-perangkat-kalurahan-banyuraden-periode-2025-2030",
             ringkasan:
-                "Acara pelantikan perangkat kalurahan baru dilaksanakan dengan khidmat di Balai Kalurahan Pondokrejo.",
-            konten: `Pondokrejo, 24 Oktober 2025 - Acara pelantikan perangkat Kalurahan Pondokrejo periode 2025-2030 telah dilaksanakan dengan khidmat di Balai Kalurahan Pondokrejo. Acara yang dihadiri oleh Bupati Sleman, Camat Mlati, serta seluruh warga masyarakat ini berlangsung tertib dan lancar.
+                "Acara pelantikan perangkat kalurahan baru dilaksanakan dengan khidmat di Balai Kalurahan Banyuraden.",
+            konten: `Banyuraden, 24 Oktober 2025 - Acara pelantikan perangkat Kalurahan Banyuraden periode 2025-2030 telah dilaksanakan dengan khidmat di Balai Kalurahan Banyuraden. Acara yang dihadiri oleh Bupati Sleman, Camat Gamping, serta seluruh warga masyarakat ini berlangsung tertib dan lancar.
 
       Dalam sambutannya, Bupati Sleman menekankan pentingnya peran perangkat kalurahan dalam mewujudkan kalurahan yang maju dan mandiri. "Perangkat kalurahan adalah ujung tombak pemerintahan yang langsung bersentuhan dengan masyarakat," ujarnya.
 
-      Lurah Pondokrejo yang baru dilantik, Bapak Ahmad Wijaya, menyampaikan terima kasih atas kepercayaan yang diberikan. "Kami berkomitmen untuk bekerja keras melayani masyarakat dan membawa Kalurahan Pondokrejo menjadi lebih baik lagi," katanya.
+      Lurah Banyuraden yang baru dilantik, Bapak Ahmad Wijaya, menyampaikan terima kasih atas kepercayaan yang diberikan. "Kami berkomitmen untuk bekerja keras melayani masyarakat dan membawa Kalurahan Banyuraden menjadi lebih baik lagi," katanya.
 
       Acara pelantikan juga diisi dengan penandatanganan pakta integritas dan serah terima jabatan dari pejabat lama kepada pejabat baru.`,
             gambar: "/images/berita/pelantikan-perangkat-desa.jpg",
             kategori: "Pemerintahan",
-            tag: "pelantikan,perangkat-kalurahan,pondokrejo",
+            tag: "pelantikan,perangkat-kalurahan,banyuraden",
             penulis: "Admin Kalurahan",
             status: "PUBLISHED" as const,
             dipublikasi: new Date("2025-10-24"),
             viewCount: 245,
         },
         {
-            judul: "Program Vaksinasi COVID-19 Dosis Lanjutan di Kalurahan Pondokrejo",
-            slug: "program-vaksinasi-covid-19-dosis-lanjutan-di-kalurahan-pondokrejo",
+            judul: "Program Vaksinasi COVID-19 Dosis Lanjutan di Kalurahan Banyuraden",
+            slug: "program-vaksinasi-covid-19-dosis-lanjutan-di-kalurahan-banyuraden",
             ringkasan:
-                "Puskesmas Pembantu Kalurahan Pondokrejo menyelenggarakan vaksinasi COVID-19 dosis lanjutan untuk seluruh warga.",
-            konten: `Pondokrejo, 23 Oktober 2025 - Puskesmas Pembantu Kalurahan Pondokrejo kembali menyelenggarakan program vaksinasi COVID-19 dosis lanjutan (booster) untuk seluruh warga Kalurahan Pondokrejo yang telah memenuhi syarat.
+                "Puskesmas Pembantu Kalurahan Banyuraden menyelenggarakan vaksinasi COVID-19 dosis lanjutan untuk seluruh warga.",
+            konten: `Banyuraden, 23 Oktober 2025 - Puskesmas Pembantu Kalurahan Banyuraden kembali menyelenggarakan program vaksinasi COVID-19 dosis lanjutan (booster) untuk seluruh warga Kalurahan Banyuraden yang telah memenuhi syarat.
 
       Kegiatan yang berlangsung selama dua hari ini berhasil memberikan vaksin kepada 350 warga dari target 400 orang. Kepala Puskesmas Pembantu, Ibu Siti Nurjanah, menyampaikan apresiasi atas antusiasme warga.
 
       "Tingkat partisipasi warga sangat tinggi, ini menunjukkan kesadaran masyarakat akan pentingnya kesehatan," kata Ibu Siti. "Kami akan terus menggelar vaksinasi hingga seluruh warga mendapatkan vaksin lengkap."
 
-      Pemerintah Kalurahan Pondokrejo menyediakan layanan antar-jemput bagi lansia dan penyandang disabilitas untuk memastikan semua warga dapat mengakses layanan vaksinasi ini.`,
+      Pemerintah Kalurahan Banyuraden menyediakan layanan antar-jemput bagi lansia dan penyandang disabilitas untuk memastikan semua warga dapat mengakses layanan vaksinasi ini.`,
             gambar: "/images/berita/vaksinasi-covid.jpg",
             kategori: "Kesehatan",
             tag: "vaksinasi,covid-19,kesehatan",
@@ -115,7 +115,7 @@ async function main() {
             slug: "pembangunan-jalan-usaha-tani-dusun-krajan-selesai",
             ringkasan:
                 "Pembangunan jalan usaha tani sepanjang 1,2 km di Dusun Krajan telah selesai dan dapat dimanfaatkan petani.",
-            konten: `Pondokrejo, 22 Oktober 2025 - Pembangunan jalan usaha tani sepanjang 1,2 kilometer di Dusun Krajan telah selesai dikerjakan dan sudah dapat dimanfaatkan oleh para petani.
+            konten: `Banyuraden, 22 Oktober 2025 - Pembangunan jalan usaha tani sepanjang 1,2 kilometer di Dusun Krajan telah selesai dikerjakan dan sudah dapat dimanfaatkan oleh para petani.
 
       Proyek yang menggunakan Dana Kalurahan sebesar Rp 350 juta ini mulai dikerjakan pada Agustus 2025 dan selesai tepat waktu pada Oktober 2025. Jalan dengan lebar 3 meter ini dilengkapi dengan drainase di kedua sisinya.
 
@@ -131,17 +131,17 @@ async function main() {
             viewCount: 312,
         },
         {
-            judul: "Festival Seni dan Budaya Kalurahan Pondokrejo 2025",
-            slug: "festival-seni-dan-budaya-kalurahan-pondokrejo-2025",
+            judul: "Festival Seni dan Budaya Kalurahan Banyuraden 2025",
+            slug: "festival-seni-dan-budaya-kalurahan-banyuraden-2025",
             ringkasan:
-                "Festival Seni dan Budaya tahunan Kalurahan Pondokrejo kembali digelar dengan menampilkan berbagai pertunjukan seni tradisional.",
-            konten: `Pondokrejo, 21 Oktober 2025 - Festival Seni dan Budaya Kalurahan Pondokrejo 2025 kembali digelar meriah di Lapangan Kalurahan Pondokrejo. Acara tahunan ini menampilkan berbagai pertunjukan seni tradisional seperti jathilan, kethoprak, dan tari klasik Jawa.
+                "Festival Seni dan Budaya tahunan Kalurahan Banyuraden kembali digelar dengan menampilkan berbagai pertunjukan seni tradisional.",
+            konten: `Banyuraden, 21 Oktober 2025 - Festival Seni dan Budaya Kalurahan Banyuraden 2025 kembali digelar meriah di Lapangan Kalurahan Banyuraden. Acara tahunan ini menampilkan berbagai pertunjukan seni tradisional seperti jathilan, kethoprak, dan tari klasik Jawa.
 
-      Festival yang dibuka oleh Bapak Lurah Pondokrejo ini diikuti oleh 12 sanggar seni dari berbagai dusun di Kalurahan Pondokrejo. Ribuan warga hadir untuk menyaksikan pertunjukan yang berlangsung dari siang hingga malam hari.
+      Festival yang dibuka oleh Bapak Lurah Banyuraden ini diikuti oleh 12 sanggar seni dari berbagai dusun di Kalurahan Banyuraden. Ribuan warga hadir untuk menyaksikan pertunjukan yang berlangsung dari siang hingga malam hari.
 
       "Festival ini bertujuan untuk melestarikan seni dan budaya tradisional serta menjadi ajang silaturahmi antar warga," kata Bapak Lurah. "Kita harus terus menjaga warisan budaya leluhur kita."
 
-      Selain pertunjukan seni, festival juga dimeriahkan dengan bazaar produk UMKM kalurahan, lomba masak tradisional, dan pameran foto sejarah Kalurahan Pondokrejo.`,
+      Selain pertunjukan seni, festival juga dimeriahkan dengan bazaar produk UMKM kalurahan, lomba masak tradisional, dan pameran foto sejarah Kalurahan Banyuraden.`,
             gambar: "/images/berita/festival-seni-budaya.jpg",
             kategori: "Budaya",
             tag: "festival,seni,budaya,tradisional",
@@ -154,8 +154,8 @@ async function main() {
             judul: "Bantuan Langsung Tunai Dana Kalurahan Tahap III Cair",
             slug: "bantuan-langsung-tunai-dana-kalurahan-tahap-iii-cair",
             ringkasan:
-                "BLT Dana Kalurahan tahap III untuk 215 KK di Kalurahan Pondokrejo telah dicairkan melalui rekening masing-masing penerima.",
-            konten: `Pondokrejo, 20 Oktober 2025 - Bantuan Langsung Tunai (BLT) Dana Kalurahan tahap III untuk 215 keluarga penerima manfaat di Kalurahan Pondokrejo telah dicairkan.
+                "BLT Dana Kalurahan tahap III untuk 215 KK di Kalurahan Banyuraden telah dicairkan melalui rekening masing-masing penerima.",
+            konten: `Banyuraden, 20 Oktober 2025 - Bantuan Langsung Tunai (BLT) Dana Kalurahan tahap III untuk 215 keluarga penerima manfaat di Kalurahan Banyuraden telah dicairkan.
 
       Pencairan dilakukan melalui transfer ke rekening masing-masing penerima yang sudah terdaftar dalam Data Terpadu Kesejahteraan Sosial (DTKS). Setiap KPM menerima bantuan sebesar Rp 300.000 per bulan untuk tiga bulan ke depan.
 
@@ -191,7 +191,7 @@ async function main() {
     const pengumumanData = [
         {
             judul: "Pemadaman Listrik Bergilir 25-26 Oktober 2025",
-            konten: `Berdasarkan informasi dari PLN Rayon Mlati, akan ada pemadaman listrik bergilir pada tanggal 25-26 Oktober 2025.
+            konten: `Berdasarkan informasi dari PLN Rayon Gamping, akan ada pemadaman listrik bergilir pada tanggal 25-26 Oktober 2025.
 
       Jadwal pemadaman:
       - Senin, 25 Oktober 2025: Pukul 09:00 - 12:00 WIB
@@ -210,13 +210,13 @@ async function main() {
         },
         {
             judul: "Imunisasi Anak Balita di Posyandu",
-            konten: `Jadwal imunisasi rutin untuk anak balita di Posyandu Kalurahan Pondokrejo:
+            konten: `Jadwal imunisasi rutin untuk anak balita di Posyandu Kalurahan Banyuraden:
 
       Posyandu Mawar: Setiap Senin, pukul 08:00 - 10:00 WIB
       Posyandu Melati: Setiap Rabu, pukul 08:00 - 10:00 WIB
       Posyandu Sakura: Setiap Jumat, pukul 08:00 - 10:00 WIB
 
-      Dimohon kepada orang tua untuk membawa Kartu Menuju Sehat (KMS) dan buku imunisasi anak. Gratis bagi seluruh anak balita di Kalurahan Pondokrejo.`,
+      Dimohon kepada orang tua untuk membawa Kartu Menuju Sehat (KMS) dan buku imunisasi anak. Gratis bagi seluruh anak balita di Kalurahan Banyuraden.`,
             gambar: "/images/pengumuman/imunisasi-balita.jpg",
             prioritas: "NORMAL" as const,
             status: "PUBLISHED" as const,
@@ -225,10 +225,10 @@ async function main() {
         },
         {
             judul: "Pembayaran PBB-P2 Tahun 2025",
-            konten: `Pembayaran Pajak Bumi dan Bangunan Perdesaan dan Perkotaan (PBB-P2) tahun 2025 dapat dilakukan di Kantor Kalurahan Pondokrejo.
+            konten: `Pembayaran Pajak Bumi dan Bangunan Perdesaan dan Perkotaan (PBB-P2) tahun 2025 dapat dilakukan di Kantor Kalurahan Banyuraden.
 
       Waktu: Senin - Jumat, pukul 08:00 - 15:00 WIB
-      Tempat: Kantor Kalurahan Pondokrejo
+      Tempat: Kantor Kalurahan Banyuraden
 
       Persyaratan:
       - SPPT PBB-P2 asli
@@ -270,7 +270,7 @@ async function main() {
         {
             goal: 1,
             judul: "Tanpa Kemiskinan",
-            deskripsi: "Menghapus kemiskinan dalam segala bentuknya di mana pun termasuk di Kalurahan Pondokrejo",
+            deskripsi: "Menghapus kemiskinan dalam segala bentuknya di mana pun termasuk di Kalurahan Banyuraden",
             progress: 78.5,
             targetTahun: 2030,
             satuan: "%",
@@ -412,7 +412,7 @@ async function main() {
 
     // Create SDGs Progress
     for (const sdgs of sdgsProgressData) {
-        await prisma.sdGsProgress.upsert({
+        await prisma.sDGsProgress.upsert({
             where: { goal: sdgs.goal },
             update: sdgs,
             create: sdgs,
@@ -425,22 +425,22 @@ async function main() {
 
     const lokasiData = [
         {
-            nama: "Kantor Kalurahan Pondokrejo",
-            deskripsi: "Kantor Pemerintah Kalurahan Pondokrejo, pusat layanan administrasi dan pelayanan masyarakat",
+            nama: "Kantor Kalurahan Banyuraden",
+            deskripsi: "Kantor Pemerintah Kalurahan Banyuraden, pusat layanan administrasi dan pelayanan masyarakat",
             jenis: "PEMERINTAHAN" as const,
-            alamat: "Jl. Kembang Kepuh No. 1, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Kembang Kepuh No. 1, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7706,110.3762",
             telepon: "0274-123456",
             jamOperasi: "Senin-Jumat: 08:00-15:00 WIB",
-            website: "https://pondokrejo.clasnet.co.id",
+            website: "https://banyuraden.clasnet.co.id",
             gambar: "/images/lokasi/kantor-desa.jpg",
             aktif: true,
         },
         {
-            nama: "Puskesmas Pembantu Pondokrejo",
-            deskripsi: "Fasilitas kesehatan primer untuk layanan kesehatan dasar masyarakat Kalurahan Pondokrejo",
+            nama: "Puskesmas Pembantu Banyuraden",
+            deskripsi: "Fasilitas kesehatan primer untuk layanan kesehatan dasar masyarakat Kalurahan Banyuraden",
             jenis: "KESEHATAN" as const,
-            alamat: "Jl. Kembang Kepuh No. 15, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Kembang Kepuh No. 15, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7712,110.3758",
             telepon: "0274-123457",
             jamOperasi: "Senin-Sabtu: 08:00-14:00 WIB",
@@ -449,22 +449,22 @@ async function main() {
             aktif: true,
         },
         {
-            nama: "SD Negeri Pondokrejo",
-            deskripsi: "Sekolah Dasar Negeri unggulan di Kalurahan Pondokrejo dengan fasilitas lengkap",
+            nama: "SD Negeri Banyuraden",
+            deskripsi: "Sekolah Dasar Negeri unggulan di Kalurahan Banyuraden dengan fasilitas lengkap",
             jenis: "PENDIDIKAN" as const,
-            alamat: "Jl. Flamboyan No. 3, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Flamboyan No. 3, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7698,110.3769",
             telepon: "0274-123458",
             jamOperasi: "Senin-Jumat: 07:00-13:00 WIB",
-            website: "https://sdpondokrejo.sch.id",
+            website: "https://sdbanyuraden.sch.id",
             gambar: "/images/lokasi/sd-negeri.jpg",
             aktif: true,
         },
         {
             nama: "Masjid Jami Al-Hikmah",
-            deskripsi: "Masjid utama Kalurahan Pondokrejo untuk kegiatan ibadah dan syiar Islam",
+            deskripsi: "Masjid utama Kalurahan Banyuraden untuk kegiatan ibadah dan syiar Islam",
             jenis: "IBADAH" as const,
-            alamat: "Jl. Kembang Kepuh No. 25, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Kembang Kepuh No. 25, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7702,110.3765",
             telepon: "0274-123459",
             jamOperasi: "24 jam",
@@ -473,10 +473,10 @@ async function main() {
             aktif: true,
         },
         {
-            nama: "Lapangan Kalurahan Pondokrejo",
+            nama: "Lapangan Kalurahan Banyuraden",
             deskripsi: "Fasilitas olahraga dan kegiatan kemasyarakatan umum",
             jenis: "FASILITAS_UMUM" as const,
-            alamat: "Jl. Melati No. 5, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Melati No. 5, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7718,110.3752",
             telepon: null,
             jamOperasi: "05:00-21:00 WIB",
@@ -485,10 +485,10 @@ async function main() {
             aktif: true,
         },
         {
-            nama: "Pasar Kalurahan Pondokrejo",
+            nama: "Pasar Kalurahan Banyuraden",
             deskripsi: "Pasar tradisional untuk kegiatan ekonomi dan perdagangan masyarakat",
             jenis: "EKONOMI" as const,
-            alamat: "Jl. Kembang Kepuh No. 50, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Kembang Kepuh No. 50, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7708,110.3770",
             telepon: "0274-123460",
             jamOperasi: "04:00-12:00 WIB",
@@ -497,10 +497,10 @@ async function main() {
             aktif: true,
         },
         {
-            nama: "Balai Seni dan Budaya Pondokrejo",
+            nama: "Balai Seni dan Budaya Banyuraden",
             deskripsi: "Pusat kegiatan seni, budaya, dan pelatihan keterampilan masyarakat",
             jenis: "BUDAYA" as const,
-            alamat: "Jl. Kenanga No. 8, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Kenanga No. 8, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7695,110.3773",
             telepon: "0274-123461",
             jamOperasi: "Senin-Sabtu: 09:00-16:00 WIB",
@@ -509,10 +509,10 @@ async function main() {
             aktif: true,
         },
         {
-            nama: "Lapangan Futsal Pondokrejo",
+            nama: "Lapangan Futsal Banyuraden",
             deskripsi: "Fasilitas olahraga futsal sintetis untuk masyarakat",
             jenis: "OLAHRAGA" as const,
-            alamat: "Jl. Mawar No. 12, Pondokrejo, Mlati, Sleman, DIY",
+            alamat: "Jl. Mawar No. 12, Banyuraden, Gamping, Sleman, DIY",
             koordinat: "-7.7715,110.3755",
             telepon: "0274-123462",
             jamOperasi: "08:00-22:00 WIB",
@@ -537,8 +537,8 @@ async function main() {
 
     const communityPollData = [
         {
-            pertanyaan: "Apa prioritas pembangunan yang paling Anda harapkan di Kalurahan Pondokrejo tahun 2026?",
-            deskripsi: "Pilih program pembangunan yang menurut Anda paling penting untuk kemajuan Kalurahan Pondokrejo",
+            pertanyaan: "Apa prioritas pembangunan yang paling Anda harapkan di Kalurahan Banyuraden tahun 2026?",
+            deskripsi: "Pilih program pembangunan yang menurut Anda paling penting untuk kemajuan Kalurahan Banyuraden",
             kategori: "Pembangunan",
             tanggalMulai: new Date("2025-10-01"),
             tanggalSelesai: new Date("2025-11-30"),
@@ -552,7 +552,7 @@ async function main() {
             ],
         },
         {
-            pertanyaan: "Bagaimana kualitas pelayanan publik di Kantor Kalurahan Pondokrejo?",
+            pertanyaan: "Bagaimana kualitas pelayanan publik di Kantor Kalurahan Banyuraden?",
             deskripsi: "Berikan penilaian Anda terhadap kualitas pelayanan yang kami berikan",
             kategori: "Pelayanan",
             tanggalMulai: new Date("2025-10-15"),
@@ -561,7 +561,7 @@ async function main() {
             pilihan: ["Sangat Baik", "Baik", "Cukup", "Kurang", "Sangat Kurang"],
         },
         {
-            pertanyaan: "Program apa yang Anda inginkan untuk pemuda Kalurahan Pondokrejo?",
+            pertanyaan: "Program apa yang Anda inginkan untuk pemuda Kalurahan Banyuraden?",
             deskripsi: "Pilih program yang paling relevan untuk pengembangan potensi pemuda",
             kategori: "Pemuda",
             tanggalMulai: new Date("2025-10-20"),
@@ -733,7 +733,7 @@ async function main() {
             pesan: "BMKG mengeluarkan peringatan dini potensi hujan lebat disertai angin kencang di wilayah Sleman dan sekitarnya pada 24-26 Oktober 2025. Warga diimbau untuk waspada dan menghindari area yang rawan banjir dan longsor.",
             tingkat: "HIGH",
             kategori: "Cuaca",
-            lokasi: "Seluruh wilayah Kalurahan Pondokrejo",
+            lokasi: "Seluruh wilayah Kalurahan Banyuraden",
             koordinat: "-7.7706,110.3762",
             expiresAt: new Date("2025-10-27"),
             aktif: true,
@@ -750,7 +750,7 @@ async function main() {
         },
         {
             judul: "Informasi Penting COVID-19",
-            pesan: "Satgas COVID-19 Kalurahan Pondokrejo menginformasikan adanya penambahan 2 kasus konfirmasi COVID-19. Masyarakat diimbau untuk tetap disiplin protokol kesehatan dan segera melapor jika mengalami gejala.",
+            pesan: "Satgas COVID-19 Kalurahan Banyuraden menginformasikan adanya penambahan 2 kasus konfirmasi COVID-19. Masyarakat diimbau untuk tetap disiplin protokol kesehatan dan segera melapor jika mengalami gejala.",
             tingkat: "LOW",
             kategori: "Kesehatan",
             lokasi: "RW 02 Dusun Krajan",
@@ -798,7 +798,7 @@ async function main() {
     const notificationData = [
         {
             judul: "Pengumuman: Libur Nasional",
-            pesan: "Diberitahukan kepada seluruh warga Kalurahan Pondokrejo bahwa Kantor Kalurahan akan libur pada tanggal 28 Oktober 2025 dalam rangka Hari Sumpah Pemuda. Pelayanan akan kembali normal pada 29 Oktober 2025.",
+            pesan: "Diberitahukan kepada seluruh warga Kalurahan Banyuraden bahwa Kantor Kalurahan akan libur pada tanggal 28 Oktober 2025 dalam rangka Hari Sumpah Pemuda. Pelayanan akan kembali normal pada 29 Oktober 2025.",
             jenis: "PENGUMUMAN" as const,
             icon: "calendar",
             link: "/pengumuman/libur-nasional",
@@ -807,7 +807,7 @@ async function main() {
         },
         {
             judul: "Jadwal Vaksinasi COVID-19",
-            pesan: "Puskesmas Pembantu Kalurahan Pondokrejo akan menyelenggarakan vaksinasi COVID-19 dosis lanjutan pada 30-31 Oktober 2025. Daftar sekarang juga!",
+            pesan: "Puskesmas Pembantu Kalurahan Banyuraden akan menyelenggarakan vaksinasi COVID-19 dosis lanjutan pada 30-31 Oktober 2025. Daftar sekarang juga!",
             jenis: "INFORMASI" as const,
             icon: "syringe",
             link: "/layanan/kesehatan",
@@ -868,7 +868,7 @@ async function main() {
             nikPemohon: "3401011501850001",
             emailPemohon: "budi.santoso@email.com",
             teleponPemohon: "0812-3456-7890",
-            alamatLengkap: "Jl. Melati No. 15, Pondokrejo, Mlati, Sleman, DIY",
+            alamatLengkap: "Jl. Melati No. 15, Banyuraden, Gamping, Sleman, DIY",
             jenisLayanan: JenisLayanan.KK,
             keterangan: "Pengajuan KK baru karena pindah rumah",
             dokumen: "/documents/layanan/kk_budi_santoso.pdf",
@@ -881,7 +881,7 @@ async function main() {
             nikPemohon: "3401015202750002",
             emailPemohon: "siti.nurhaliza@email.com",
             teleponPemohon: "0813-9876-5432",
-            alamatLengkap: "Jl. Kenanga No. 8, Pondokrejo, Mlati, Sleman, DIY",
+            alamatLengkap: "Jl. Kenanga No. 8, Banyuraden, Gamping, Sleman, DIY",
             jenisLayanan: JenisLayanan.KTP,
             keterangan: "Perpanjangan KTP elektronik",
             dokumen: "/documents/layanan/ktp_siti_nurhaliza.pdf",
@@ -894,7 +894,7 @@ async function main() {
             nikPemohon: "3401011001850003",
             emailPemohon: "ahmad.fauzi@email.com",
             teleponPemohon: "0815-2345-6789",
-            alamatLengkap: "Jl. Flamboyan No. 3, Pondokrejo, Mlati, Sleman, DIY",
+            alamatLengkap: "Jl. Flamboyan No. 3, Banyuraden, Gamping, Sleman, DIY",
             jenisLayanan: JenisLayanan.KELAHIRAN,
             keterangan: "Pengajuan akta kelahiran anak pertama",
             dokumen: "/documents/layanan/akta_kelahiran_ahmad_fauzi.pdf",
@@ -954,7 +954,7 @@ async function main() {
         ],
     };
 
-    const apbdes = await prisma.apbDes.upsert({
+    const apbdes = await prisma.aPBDes.upsert({
         where: { tahunAnggaran: apbdesData.tahunAnggaran },
         update: {
             totalAnggaran: apbdesData.totalAnggaran,
@@ -999,7 +999,7 @@ async function main() {
         {
             nama: "Pembangunan Jalan Usaha Tani Dusun Krajan",
             deskripsi: "Pembangunan jalan usaha tani sepanjang 1,2 km dengan lebar 3 meter dilengkapi drainase",
-            lokasi: "Dusun Krajan, Pondokrejo",
+            lokasi: "Dusun Krajan, Banyuraden",
             anggaran: 350000000,
             progress: 100,
             status: StatusProyek.SELESAI,
@@ -1008,9 +1008,9 @@ async function main() {
             koordinat: "-7.7700,110.3760",
         },
         {
-            nama: "Rehabilitasi Balai Kalurahan Pondokrejo",
+            nama: "Rehabilitasi Balai Kalurahan Banyuraden",
             deskripsi: "Penataan ulang Balai Kalurahan dengan fasilitas modern dan aksesibilitas disabilitas",
-            lokasi: "Kantor Kalurahan Pondokrejo",
+            lokasi: "Kantor Kalurahan Banyuraden",
             anggaran: 500000000,
             progress: 75,
             status: StatusProyek.BERJALAN,
@@ -1021,7 +1021,7 @@ async function main() {
         {
             nama: "Pembangunan Drainase Jl. Flamboyan",
             deskripsi: "Konstruksi drainase beton sepanjang 500 meter untuk mengatasi genangan air",
-            lokasi: "Jl. Flamboyan, Pondokrejo",
+            lokasi: "Jl. Flamboyan, Banyuraden",
             anggaran: 150000000,
             progress: 45,
             status: StatusProyek.BERJALAN,
@@ -1051,7 +1051,7 @@ async function main() {
             kategori: KategoriKegiatan.LAINNYA,
             tanggal: new Date("2025-10-25"),
             waktu: new Date("1970-01-01T06:00:00Z"),
-            lokasi: "Lapangan Kalurahan Pondokrejo",
+            lokasi: "Lapangan Kalurahan Banyuraden",
             koordinat: "-7.7718,110.3752",
             status: StatusKegiatan.AKTIF,
         },
@@ -1067,11 +1067,11 @@ async function main() {
         },
         {
             nama: "Pertemuan PKK",
-            deskripsi: "Rapat rutin PKK Kalurahan Pondokrejo untuk program kerja bulanan",
+            deskripsi: "Rapat rutin PKK Kalurahan Banyuraden untuk program kerja bulanan",
             kategori: KategoriKegiatan.LAINNYA,
             tanggal: new Date("2025-10-28"),
             waktu: new Date("1970-01-01T10:00:00Z"),
-            lokasi: "Balai Kalurahan Pondokrejo",
+            lokasi: "Balai Kalurahan Banyuraden",
             koordinat: "-7.7706,110.3762",
             status: StatusKegiatan.AKTIF,
         },
@@ -1081,7 +1081,7 @@ async function main() {
             kategori: KategoriKegiatan.BUDAYA,
             tanggal: new Date("2025-10-29"),
             waktu: new Date("1970-01-01T19:00:00Z"),
-            lokasi: "Balai Seni dan Budaya Pondokrejo",
+            lokasi: "Balai Seni dan Budaya Banyuraden",
             koordinat: "-7.7695,110.3773",
             status: StatusKegiatan.AKTIF,
         },
@@ -1091,7 +1091,7 @@ async function main() {
             kategori: KategoriKegiatan.OLAHRAGA,
             tanggal: new Date("2025-10-30"),
             waktu: new Date("1970-01-01T08:00:00Z"),
-            lokasi: "Lapangan Futsal Pondokrejo",
+            lokasi: "Lapangan Futsal Banyuraden",
             koordinat: "-7.7715,110.3755",
             status: StatusKegiatan.AKTIF,
         },
@@ -1113,27 +1113,27 @@ async function main() {
     const konfigurasiData = [
         {
             kunci: "nama_desa",
-            nilai: "Kalurahan Pondokrejo",
+            nilai: "Kalurahan Banyuraden",
             kategori: "informasi_umum",
         },
         {
             kunci: "alamat_desa",
-            nilai: "Jl. Kembang Kepuh No. 1, Pondokrejo, Mlati, Sleman, DIY 55284",
+            nilai: "Jl. Kembang Kepuh No. 1, Banyuraden, Gamping, Sleman, DIY 55293",
             kategori: "informasi_umum",
         },
         {
             kunci: "telepon_desa",
-            nilai: "(0274) 123456",
+            nilai: "(0274) 621626 / 089612624627",
             kategori: "informasi_umum",
         },
         {
             kunci: "email_desa",
-            nilai: "info@pondokrejo.clasnet.co.id",
+            nilai: "desa.banyuraden@gmail.com",
             kategori: "informasi_umum",
         },
         {
             kunci: "website_desa",
-            nilai: "https://pondokrejo.clasnet.co.id",
+            nilai: "https://banyuraden.smartdesa.net",
             kategori: "informasi_umum",
         },
         {
@@ -1153,27 +1153,27 @@ async function main() {
         },
         {
             kunci: "sosmed_facebook",
-            nilai: "https://facebook.com/desapondokrejo",
+            nilai: "https://www.facebook.com/kalurahan.banyuraden.3",
             kategori: "sosial_media",
         },
         {
             kunci: "sosmed_instagram",
-            nilai: "https://instagram.com/desapondokrejo",
+            nilai: "https://www.instagram.com/kalurahan.banyuraden",
             kategori: "sosial_media",
         },
         {
             kunci: "sosmed_youtube",
-            nilai: "https://youtube.com/desapondokrejo",
+            nilai: "https://www.youtube.com/@KalurahanBanyuraden",
             kategori: "sosial_media",
         },
         {
             kunci: "rekening_bri",
-            nilai: "1234-5678-9012-3456 a.n. Kalurahan Pondokrejo",
+            nilai: "1234-5678-9012-3456 a.n. Kalurahan Banyuraden",
             kategori: "keuangan",
         },
         {
             kunci: "rekening_bni",
-            nilai: "9876-5432-1098-7654 a.n. Kalurahan Pondokrejo",
+            nilai: "9876-5432-1098-7654 a.n. Kalurahan Banyuraden",
             kategori: "keuangan",
         },
     ];
@@ -1195,7 +1195,7 @@ Database seeded successfully with:
   - Users: ${await prisma.pengguna.count()} users
   - Berita: ${await prisma.berita.count()} artikel
   - Pengumuman: ${await prisma.pengumuman.count()} pengumuman
-  - SDGs Progress: ${await prisma.sdGsProgress.count()} goals
+  - SDGs Progress: ${await prisma.sDGsProgress.count()} goals
   - Lokasi Interaktif: ${await prisma.lokasiInteraktif.count()} lokasi
   - Community Polls: ${await prisma.communityPoll.count()} polling
   - Live Statistics: ${await prisma.liveStatistics.count()} statistik
@@ -1208,7 +1208,8 @@ Database seeded successfully with:
 }
 
 main()
-    .catch(() => {
+    .catch((e) => {
+        console.error("Seed error:", e);
         process.exit(1);
     })
     .finally(async () => {

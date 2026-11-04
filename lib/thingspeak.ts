@@ -54,30 +54,8 @@ export interface HistoricalDataEntry {
     [key: string]: string | number; // Dynamic sensor values
 }
 
-// Define all ThingSpeak channels
-export const THINGSPEAK_CHANNELS: ThingSpeakChannel[] = [
-    {
-        id: "3155825",
-        name: "IoT Monitoring Station 1",
-        location: "Kantor Kalurahan",
-        lat: -7.663494,
-        lng: 110.306996,
-    },
-    {
-        id: "3156242",
-        name: "IoT Monitoring Station 2",
-        location: "Kantor Kalurahan",
-        lat: -7.663494,
-        lng: 110.306996,
-    },
-    {
-        id: "3160660",
-        name: "IoT Monitoring Station 3",
-        location: "Kantor Kalurahan",
-        lat: -7.663494,
-        lng: 110.306996,
-    },
-];
+// Define all ThingSpeak channels - Kalurahan Banyuraden
+export const THINGSPEAK_CHANNELS: ThingSpeakChannel[] = [];
 
 // Helper function to determine sensor type based on field name
 function getSensorType(fieldName: string | null): string {
@@ -247,6 +225,18 @@ async function fetchChannelData(
 
 // Main function to fetch all IoT data
 export async function fetchAllIoTData(): Promise<{ devices: IoTDevice[]; summary: unknown }> {
+    if (THINGSPEAK_CHANNELS.length === 0) {
+        return {
+            devices: [],
+            summary: {
+                totalDevices: 0,
+                totalSensors: 0,
+                activeSensors: 0,
+                warningSensors: 0,
+                criticalSensors: 0,
+            },
+        };
+    }
     // Check cache first
     const now = Date.now();
     if (cachedData && now - cachedData.timestamp < CACHE_DURATION) {

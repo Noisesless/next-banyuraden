@@ -68,11 +68,13 @@ function normalizeUrl(url: string, baseUrl?: string): string {
     throw new Error("Invalid URL: must be absolute or provide baseUrl");
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function stripLinksRecursively(obj: any): any {
     if (Array.isArray(obj)) {
         return obj.map(stripLinksRecursively);
     }
     if (typeof obj === 'object' && obj !== null) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: any = {};
         for (const key in obj) {
             if (key === 'links') {
@@ -236,7 +238,7 @@ export class ApiService {
 /**
  * Primary OpenSID base URL (banyuraden.id)
  */
-const OPENSID_PRIMARY_URL = process.env.OPENSID_API_PRIMARY || "https://banyuraden.id";
+const OPENSID_PRIMARY_URL = process.env.OPENSID_API_PRIMARY || "https://banyuraden.sleman-desa.id";
 
 /**
  * Fallback OpenSID base URL (banyuraden.sleman-desa.id)

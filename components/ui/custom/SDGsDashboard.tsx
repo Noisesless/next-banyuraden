@@ -1,4 +1,5 @@
 import * as React from "react";
+import { sanitizeHtml } from "@/lib/sanitize";
 import Image from "next/image";
 import {
     BarChart3,
@@ -487,7 +488,7 @@ const DetailedScoreDisplay: React.FC<DetailedScoreDisplayProps> = ({ goal, onClo
                                                             <div
                                                                 className="text-sm text-gray-700 [&_table]:w-full [&_table]:border [&_table]:border-gray-200 [&_table]:rounded-lg [&_table]:overflow-hidden [&_th]:bg-primary [&_th]:text-white [&_th]:p-2 [&_th]:text-center [&_th]:font-semibold [&_td]:p-2 [&_td]:border-t [&_td]:border-gray-200 [&_td]:align-top"
                                                                 dangerouslySetInnerHTML={{
-                                                                    __html: decodeHtml(item.recommendation),
+                                                                    __html: sanitizeHtml(decodeHtml(item.recommendation)),
                                                                 }}
                                                             />
                                                         </div>
