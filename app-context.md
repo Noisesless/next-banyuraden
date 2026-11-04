@@ -1,4 +1,4 @@
-<!-- Last: 2026-11-04T14:10:00+07:00 | Phase: Gutenberg Gallery Layout & Agenda Integration | Build: OK -->
+<!-- Last: 2026-11-04T16:00:00+07:00 | Phase: SDGs Live OpenSID Integration & 18 Permendesa Indicators | Build: OK -->
 
 ## [APP]
 name="Portal Kalurahan Banyuraden" slug="next-banyuraden" type="Village Portal & OpenSID Consumer" stack="Next.js 15.3.4|Prisma 6.18.0|Tailwind CSS|MapLibre GL 5.15"
@@ -10,7 +10,7 @@ bg=#F9FAFB surface=#FFFFFF text=#111827 accent1=#059669 accent2=#0284C7
 font_head=Inter font_body=Inter radius=8px nav=sticky theme=light
 
 ## [STATE]
-phase=Production Deployed done=100% last="Gutenberg gallery 3-col responsive grid, cover fallback cover asli + fallback next, Agenda Cat 3 terintegrasi langsung ke /pengumuman & API"
+phase=Production Deployed done=100% last="Integrasi OpenSID Banyuraden live SDGs (skor 46.91%) dan rincian lengkap 18 kriteria Permendesa No. 21/2020 dengan rekomendasi program aksi"
 build=OK issues=0
 
 ## [ISSUES]
@@ -30,6 +30,7 @@ icon_lib=lucide
 [Berita Mutasi]=Admin Session Guard→POST/PUT/DELETE /api/berita→mock/db
 [Pengumuman & Agenda]=GET /api/pengumuman→getSlemankabAgenda (WP Cat 3: 52 posts)→/pengumuman interactive page (search + modal dialog)
 [Live News Integration]=GET /api/external-news & /api/opensid-proxy→lib/slemankab-news.ts (WP REST API 1008 posts)→fallback OpenSID (sleman-desa.id)
+[SDGs Integration]=GET /api/sdgs→OpenSID /internal_api/sdgs (skor riil 46.91%)→fallback Kemendesa; GET /api/sdgs/detail/[goal]→18 indikator Permendesa No. 21/2020 + rekomendasi
 [IoT Live Monitoring]=GET /api/iot/stream→Server-Sent Events (SSE) 15s interval
 [IoT Historical]=GET /api/iot/historical/[channelId]→numeric validate→ThingSpeak feeds
 
@@ -43,6 +44,7 @@ icon_lib=lucide
 /aparatur=Aparatur Pamong=public=STABLE
 /wilayah-administratif=Wilayah Administratif=public=STABLE
 /statistik=Statistik Kependudukan=public=STABLE
+/sdgs=SDGs Kalurahan=public=STABLE
 /iot=IoT Monitoring=public=STABLE
 /potensi-desa=Potensi Desa=public=STABLE
 /fasilitas=Fasilitas Umum=public=STABLE
@@ -60,3 +62,4 @@ ADR-003=Strict numeric regex validation untuk IoT dynamic route channelId
 ADR-004=Nginx reverse proxy CloudPanel port 5091 dengan PM2 Cluster mode dan SSL Let's Encrypt
 ADR-005=WordPress REST API banyuradensid.slemankab.go.id wajib menggunakan modul https Node.js dengan browser headers untuk menembus proteksi Cloudflare WAF
 ADR-006=Gutenberg gallery (.wp-block-gallery) distyle grid responsif 1-3 kolom dengan object-cover 220px untuk mencegah layout memanjang ke bawah
+ADR-007=SDGs data diprioritaskan dari OpenSID Banyuraden /internal_api/sdgs dengan metadata indikator & rekomendasi Permendesa No. 21/2020 pada 18 kriteria
