@@ -2,8 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchSDGSDetail, createApiRouteHandler } from "@/lib/api-helpers";
 
 export const { GET, OPTIONS } = createApiRouteHandler(async (request: NextRequest, context?: unknown) => {
-    const ctxGoal = (context as { params?: { goal?: string } } | undefined)?.params?.goal;
-    const pathGoal = request.nextUrl.pathname.split("/").filter(Boolean).slice(-2, -1)[0]; // falls back if needed
+    // Tangani params baik sebagai objek maupun Promise (Next.js 14 & 15 compatibility)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawParams = (context as any)?.params;
+    const resolvedParams = rawParams instanceof Promise ? await rawParams : rawParams;
+    const ctxGoal = resolvedParams?.goal;
+
+    // Fallback ambil segmen terakhir URL (misal: /api/sdgs/detail/1 -> "1")
+    const segments = request.nextUrl.pathname.split("/").filter(Boolean);
+    const lastSegment = segments[segments.length - 1];
+    const pathGoal = /^\d+$/.test(lastSegment) ? lastSegment : "";
     const goalId = ctxGoal || pathGoal || "";
 
     const { searchParams } = new URL(request.url);
@@ -39,4 +47,3 @@ export const { GET, OPTIONS } = createApiRouteHandler(async (request: NextReques
 
     return NextResponse.json(response.data);
 });
-

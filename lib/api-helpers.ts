@@ -102,6 +102,37 @@ export async function fetchOpenSIDArsip(page?: number) {
  * SDGS API helper with location code
  */
 export async function fetchSDGSData(locationCode = "3404140004") {
+    try {
+        const { fetchWithFallback } = await import("./api-service");
+        const openSidRes = await fetchWithFallback("/internal_api/sdgs", {
+            config: {
+                cache: {
+                    revalidate: 60 * 60 * 24 * 7, // 7 days
+                    tags: ["sdgs-data"],
+                },
+            },
+        });
+
+        if (openSidRes.success && openSidRes.data) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const raw = openSidRes.data as any;
+            const attr = raw?.data?.[0]?.attributes;
+            if (attr && Array.isArray(attr.data) && attr.data.length > 0) {
+                return {
+                    success: true,
+                    status: 200,
+                    data: {
+                        average: attr.average || "0",
+                        data: attr.data,
+                        total_desa: attr.total_desa || 0,
+                    },
+                };
+            }
+        }
+    } catch (e) {
+        console.warn("[sdgs] OpenSID fetch failed, falling back to Kemendesa:", e);
+    }
+
     return sdgsApi.get(`/sdgs/searching/score-sdgs?location_code=${locationCode}`, {
         cache: {
             revalidate: 60 * 60 * 24 * 30, // 30 days
@@ -112,14 +143,51 @@ export async function fetchSDGSData(locationCode = "3404140004") {
 
 /**
  * SDGS detail API helper with goal and location code
+ * Jika endpoint Kemendesa mengembalikan data kosong atau gagal,
+ * otomatis fallback ke metadata resmi 18 kriteria SDGs Desa (Permendesa No. 21/2020).
  */
 export async function fetchSDGSDetail(goalId: string, locationCode = "3404140004") {
-    return sdgsApi.get(`/sdgs/searching/score-sdgs-detail?goal=${goalId}&location_code=${locationCode}`, {
-        cache: {
-            revalidate: 60 * 60 * 24 * 30, // 30 days
-            tags: ["sdgs-data-detail"],
-        },
-    });
+    const numGoal = parseInt(goalId);
+
+    // Ambil skor riil goal saat ini dari summary data (OpenSID / Kemendesa)
+    let currentScore = 0;
+    try {
+        const summary = await fetchSDGSData(locationCode);
+        if (summary.success && summary.data && Array.isArray(summary.data.data)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const targetGoal = summary.data.data.find((g: any) => g.goals === numGoal);
+            if (targetGoal && typeof targetGoal.score === "number") {
+                currentScore = targetGoal.score;
+            }
+        }
+    } catch {
+        // Abaikan jika summary gagal, gunakan default 0
+    }
+
+    try {
+        const response = await sdgsApi.get(`/sdgs/searching/score-sdgs-detail?goal=${goalId}&location_code=${locationCode}`, {
+            cache: {
+                revalidate: 60 * 60 * 24 * 30, // 30 days
+                tags: ["sdgs-data-detail"],
+            },
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = response.data as any;
+        if (response.success && data && Array.isArray(data.recom) && data.recom.length > 0) {
+            return response;
+        }
+    } catch {
+        // Kemendesa score-sdgs-detail down/empty, fallback ke metadata resmi
+    }
+
+    // Fallback resmi Permendesa No. 21/2020
+    const { buildGoalDetailResponse } = await import("./sdgs-data");
+    return {
+        success: true,
+        status: 200,
+        data: buildGoalDetailResponse(numGoal, currentScore),
+    };
 }
 
 /**
