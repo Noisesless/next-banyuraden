@@ -151,7 +151,6 @@ next-banyuraden/
 ├── prisma/                   # Schema database & seeder
 ├── public/                   # Asset statis (logo, GeoJSON, cover default)
 ├── styles/                   # Global CSS & Gutenberg gallery grid styling
-└── .docs/                    # Dokumentasi arsitektur, database, API, & audit keamanan
 ```
 
 ---
